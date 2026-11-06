@@ -2,17 +2,13 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import {
   Calendar,
   Clock,
-  BookOpen,
   ShieldAlert,
   ArrowLeft,
-  ArrowRight,
-  Share2,
 } from 'lucide-react';
-import { BLOG_POSTS, BlogPost } from '@/data/blogArticles';
+import { BLOG_POSTS } from '@/data/blogArticles';
 
 interface PageProps {
   params: Promise<{ slug: string }>;

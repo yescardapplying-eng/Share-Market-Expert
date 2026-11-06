@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { HelpCircle, ChevronDown, Search, ShieldCheck } from 'lucide-react';
+import { ChevronDown, Search } from 'lucide-react';
 
 interface FaqCategory {
   category: string;

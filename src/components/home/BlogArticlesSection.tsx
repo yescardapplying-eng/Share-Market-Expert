@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { BookOpen, Calendar, Clock, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Calendar, Clock, ArrowRight } from 'lucide-react';
 import { BLOG_POSTS } from '@/data/blogArticles';
 
 export default function BlogArticlesSection() {

@@ -10,6 +10,7 @@ import { API_ENDPOINTS } from '@/lib/api';
 export default function LeadEnquiryModal() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [modalHeading, setModalHeading] = useState('Share Market Expert');
   const [fullName, setFullName] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
   const [selectedState, setSelectedState] = useState('');
@@ -21,17 +22,64 @@ export default function LeadEnquiryModal() {
   const [errorMessage, setErrorMessage] = useState('');
   const { t } = useLanguage();
 
-  // Trigger modal after 1 second on mount and on page changes
+  // Functional popup configuration from backend settings with frequency window check
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsOpen(true);
-    }, 1000);
+    let isCancelled = false;
+    let timer: NodeJS.Timeout | null = null;
 
-    return () => clearTimeout(timer);
+    const checkAndSchedulePopup = async () => {
+      let isEnabled = true;
+      let delaySeconds = 3;
+      let frequencyHours = 24;
+
+      try {
+        const res = await fetch(API_ENDPOINTS.SETTINGS, { cache: 'no-store' });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && json.data) {
+            const d = json.data;
+            isEnabled = d.popup_enabled === true || d.popup_enabled === '1' || d.popup_enabled === 1;
+            delaySeconds = Math.max(1, parseInt(d.popup_delay_seconds || '3', 10));
+            frequencyHours = Math.max(1, parseInt(d.popup_frequency_hours || '24', 10));
+            if (d.popup_heading) {
+              setModalHeading(d.popup_heading);
+            }
+          }
+        }
+      } catch {
+        // Fallback to default 3s delay & 24h frequency
+      }
+
+      if (isCancelled || !isEnabled) return;
+
+      // Check frequency window: prevent repeated display within configured frequency window
+      const lastClosed = localStorage.getItem('sme_popup_last_closed');
+      if (lastClosed) {
+        const elapsedHours = (Date.now() - parseInt(lastClosed, 10)) / (1000 * 60 * 60);
+        if (elapsedHours < frequencyHours) {
+          return; // Frequency window still active
+        }
+      }
+
+      timer = setTimeout(() => {
+        if (!isCancelled) {
+          setIsOpen(true);
+        }
+      }, delaySeconds * 1000);
+    };
+
+    checkAndSchedulePopup();
+
+    return () => {
+      isCancelled = true;
+      if (timer) clearTimeout(timer);
+    };
   }, [pathname]);
 
   const handleClose = () => {
     setIsOpen(false);
+    // Record timestamp to enforce frequency window
+    localStorage.setItem('sme_popup_last_closed', Date.now().toString());
   };
 
   useEffect(() => {
@@ -95,6 +143,7 @@ export default function LeadEnquiryModal() {
 
       // Verified successful insertion in MySQL database
       setStatus('success');
+      localStorage.setItem('sme_popup_last_closed', Date.now().toString());
       setTimeout(() => {
         setIsOpen(false);
         setStatus('idle');
@@ -124,7 +173,7 @@ export default function LeadEnquiryModal() {
             100% Stock Market Education
           </div>
           <h2 id="modal-title" className="text-xl font-bold tracking-tight text-white">
-            Share Market Expert
+            {modalHeading}
           </h2>
 
           <button
@@ -195,7 +244,7 @@ export default function LeadEnquiryModal() {
                 </div>
               </div>
 
-              {/* State (Clean, no optional, no UT) */}
+              {/* State */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                   STATE
@@ -245,7 +294,7 @@ export default function LeadEnquiryModal() {
                 </div>
               </div>
 
-              {/* Segment (Default: Option (Call-Put)) */}
+              {/* Segment */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                   SEGMENT
@@ -266,7 +315,7 @@ export default function LeadEnquiryModal() {
                 </div>
               </div>
 
-              {/* Capital Range (Default: Below Rs 50,000) */}
+              {/* Capital Range */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                   CAPITAL RANGE

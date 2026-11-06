@@ -3,14 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import {
-  GraduationCap,
-  Video,
-  Library,
-  Users2,
-  Calendar,
-  Layers,
   XCircle,
-  HelpCircle,
   ArrowRight,
   ShieldAlert,
   ChevronDown,

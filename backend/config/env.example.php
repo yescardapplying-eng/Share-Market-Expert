@@ -16,3 +16,4 @@ return [
     'DB_PASS' => 'YOUR_STRONG_DATABASE_PASSWORD', // Your Hostinger MySQL Database User Password
     'DB_PORT' => '3306',
 ];
+

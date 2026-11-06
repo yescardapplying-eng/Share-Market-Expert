@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Scale, ArrowRight, ShieldCheck, AlertTriangle } from 'lucide-react';
 
 export default function RiskRewardCalculatorPage() {
   const [entryPrice, setEntryPrice] = useState<number>(1000);
@@ -183,7 +182,7 @@ export default function RiskRewardCalculatorPage() {
               <p className="text-slate-600">No. Targets must be based on genuine technical resistance or chart extensions. Artificially placing a target in unchartered territory reduces the probability of it ever being reached.</p>
             </div>
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-              <h3 className="font-bold text-[#142B45] mb-1">What does "statistical expectancy" mean?</h3>
+              <h3 className="font-bold text-[#142B45] mb-1">What does &quot;statistical expectancy&quot; mean?</h3>
               <p className="text-slate-600">Expectancy = (Win% × Average Win) - (Loss% × Average Loss). A positive expectancy over 50+ trades ensures your account grows over time despite individual losing trades.</p>
             </div>
           </div>

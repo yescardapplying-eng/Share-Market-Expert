@@ -90,11 +90,6 @@ function getBearerToken(): ?string {
         return $matches[1];
     }
 
-    // Fallback to URL parameter if provided (for authenticated downloads/exports)
-    if (!empty($_GET['auth'])) {
-        return trim((string)$_GET['auth']);
-    }
-
     return null;
 }
 

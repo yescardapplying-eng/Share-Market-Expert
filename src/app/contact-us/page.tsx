@@ -10,7 +10,6 @@ import {
   ShieldCheck,
   Send,
   CheckCircle2,
-  AlertTriangle,
   Lock,
 } from 'lucide-react';
 import { INDIAN_STATES_AND_UTS } from '@/data/indianStates';
@@ -37,6 +36,7 @@ export default function ContactUsPage() {
   const [mobileNumber, setMobileNumber] = useState('');
   const [selectedState, setSelectedState] = useState('');
   const [message, setMessage] = useState('');
+  const [consentGiven, setConsentGiven] = useState(false);
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -54,6 +54,11 @@ export default function ContactUsPage() {
       return;
     }
 
+    if (!consentGiven) {
+      setErrorMessage('Please accept the privacy consent declaration to submit your inquiry.');
+      return;
+    }
+
     setStatus('submitting');
 
     try {
@@ -68,6 +73,7 @@ export default function ContactUsPage() {
           mobile_number: cleanPhone,
           state: selectedState || null,
           message: message.trim() || null,
+          consent: true,
         }),
       });
 
@@ -230,10 +236,25 @@ export default function ContactUsPage() {
                   />
                 </div>
 
+                {/* Mandatory Privacy & Educational Consent Checkbox (Unticked by default) */}
+                <div className="flex items-start gap-2.5 pt-1">
+                  <input
+                    id="privacy-consent"
+                    type="checkbox"
+                    required
+                    checked={consentGiven}
+                    onChange={(e) => setConsentGiven(e.target.checked)}
+                    className="w-4 h-4 mt-0.5 accent-[#176B55] rounded cursor-pointer shrink-0"
+                  />
+                  <label htmlFor="privacy-consent" className="text-xs text-slate-600 leading-snug cursor-pointer">
+                    I agree to the <Link href="/privacy-policy" className="text-[#176B55] font-semibold underline underline-offset-2">Privacy Policy</Link> and consent to being contacted for educational course queries only. I understand Share Market Expert does NOT provide stock tips, trade calls, or investment advisory services.
+                  </label>
+                </div>
+
                 <button
                   type="submit"
                   disabled={status === 'submitting'}
-                  className="touch-target w-full py-3.5 px-6 rounded-xl text-sm font-bold text-white bg-[#176B55] hover:bg-[#125543] active:bg-[#0e4334] transition-all shadow-md flex items-center justify-center gap-2"
+                  className="touch-target w-full py-3.5 px-6 rounded-xl text-sm font-bold text-white bg-[#176B55] hover:bg-[#125543] active:bg-[#0e4334] transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   <Send className="w-4 h-4" />
                   <span>{status === 'submitting' ? 'Submitting Enquiry...' : 'Submit Enquiry'}</span>

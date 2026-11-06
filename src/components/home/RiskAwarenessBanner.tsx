@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, ShieldCheck, Scale, Check } from 'lucide-react';
+import { AlertTriangle, ShieldCheck, Scale } from 'lucide-react';
 
 export default function RiskAwarenessBanner() {
   return (

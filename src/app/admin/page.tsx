@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
 import {
   Lock,
   User,
@@ -12,13 +11,8 @@ import {
   Settings,
   Package,
   Mail,
-  CheckCircle2,
   AlertCircle,
   RefreshCw,
-  Phone,
-  Calendar,
-  MapPin,
-  TrendingUp,
 } from 'lucide-react';
 import { API_ENDPOINTS } from '@/lib/api';
 
@@ -52,8 +46,28 @@ interface AdminProfile {
 }
 
 export default function AdminDashboardPage() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [adminUser, setAdminUser] = useState<AdminProfile | null>(null);
+  // Synchronous lazy state initialization prevents cascading renders and satisfies React 19 ESLint rules
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return Boolean(localStorage.getItem('sme_admin_token'));
+    }
+    return false;
+  });
+
+  const [adminUser, setAdminUser] = useState<AdminProfile | null>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('sme_admin_profile');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          return null;
+        }
+      }
+    }
+    return null;
+  });
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -69,6 +83,7 @@ export default function AdminDashboardPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [isLoadingLeads, setIsLoadingLeads] = useState(false);
   const [leadErrorMessage, setLeadErrorMessage] = useState('');
+  const [isExportingCsv, setIsExportingCsv] = useState(false);
 
   // Contacts State
   const [contacts, setContacts] = useState<ContactRecord[]>([]);
@@ -79,15 +94,33 @@ export default function AdminDashboardPage() {
   const [goldPrice, setGoldPrice] = useState(42999);
   const [platinumPrice, setPlatinumPrice] = useState(79999);
   const [packagesSaveStatus, setPackagesSaveStatus] = useState('');
+  const [packagesError, setPackagesError] = useState('');
+  const [isSavingPackages, setIsSavingPackages] = useState(false);
 
   // Popup Settings State
   const [popupEnabled, setPopupEnabled] = useState(true);
-  const [popupDelay, setPopupDelay] = useState(1);
+  const [popupDelay, setPopupDelay] = useState(3);
   const [popupFrequencyHours, setPopupFrequencyHours] = useState(24);
   const [popupHeading, setPopupHeading] = useState('Share Market Expert');
   const [popupStatusMsg, setPopupStatusMsg] = useState('');
+  const [popupError, setPopupError] = useState('');
+  const [isSavingPopup, setIsSavingPopup] = useState(false);
 
-  const handleLogout = useCallback(() => {
+  const handleLogout = useCallback(async () => {
+    const token = localStorage.getItem('sme_admin_token');
+    if (token) {
+      try {
+        await fetch(API_ENDPOINTS.ADMIN_LOGOUT, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json',
+          },
+        });
+      } catch {
+        // Proceed with client cleanup even if offline
+      }
+    }
     localStorage.removeItem('sme_admin_token');
     localStorage.removeItem('sme_admin_profile');
     setIsAuthenticated(false);
@@ -165,24 +198,64 @@ export default function AdminDashboardPage() {
     }
   }, [handleLogout]);
 
-  // Check existing session token on mount
-  useEffect(() => {
-    const token = localStorage.getItem('sme_admin_token');
-    const savedProfile = localStorage.getItem('sme_admin_profile');
-
-    if (token) {
-      setIsAuthenticated(true);
-      if (savedProfile) {
-        try {
-          setAdminUser(JSON.parse(savedProfile));
-        } catch {
-          // ignore
+  const loadPackages = useCallback(async (token?: string) => {
+    const activeToken = token || localStorage.getItem('sme_admin_token');
+    if (!activeToken) return;
+    try {
+      const res = await fetch(API_ENDPOINTS.ADMIN_PACKAGES, {
+        headers: { 'Authorization': `Bearer ${activeToken}` }
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data)) {
+          for (const pkg of json.data) {
+            if (pkg.slug === 'silver-plan') setSilverPrice(Number(pkg.price_inr));
+            if (pkg.slug === 'gold-plan') setGoldPrice(Number(pkg.price_inr));
+            if (pkg.slug === 'platinum-plan') setPlatinumPrice(Number(pkg.price_inr));
+          }
         }
       }
+    } catch {
+      // Ignore initial load failure
+    }
+  }, []);
+
+  const loadSettings = useCallback(async (token?: string) => {
+    const activeToken = token || localStorage.getItem('sme_admin_token');
+    if (!activeToken) return;
+    try {
+      const res = await fetch(API_ENDPOINTS.ADMIN_SETTINGS, {
+        headers: { 'Authorization': `Bearer ${activeToken}` }
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.data) {
+          const d = json.data;
+          setPopupEnabled(d.popup_enabled === '1' || d.popup_enabled === 1 || d.popup_enabled === true);
+          if (d.popup_delay_seconds) setPopupDelay(parseInt(d.popup_delay_seconds, 10));
+          if (d.popup_frequency_hours) setPopupFrequencyHours(parseInt(d.popup_frequency_hours, 10));
+          if (d.popup_heading) setPopupHeading(d.popup_heading);
+        }
+      }
+    } catch {
+      // Ignore initial load failure
+    }
+  }, []);
+
+  // Fetch initial data only
+  useEffect(() => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('sme_admin_token') : null;
+    if (!token) return;
+
+    const timer = setTimeout(() => {
       loadLeads(token);
       loadContacts(token);
-    }
-  }, [loadLeads, loadContacts]);
+      loadPackages(token);
+      loadSettings(token);
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [loadLeads, loadContacts, loadPackages, loadSettings]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -219,6 +292,8 @@ export default function AdminDashboardPage() {
 
       loadLeads(data.token);
       loadContacts(data.token);
+      loadPackages(data.token);
+      loadSettings(data.token);
     } catch {
       setLoginError('Network error connecting to authentication server.');
     } finally {
@@ -255,10 +330,113 @@ export default function AdminDashboardPage() {
     }
   };
 
-  const exportLeadsToCsv = () => {
+  // Secure CSV Export using Bearer Authorization header (No tokens in query-string)
+  const exportLeadsToCsv = async () => {
     const token = localStorage.getItem('sme_admin_token');
     if (!token) return;
-    window.location.href = `${API_ENDPOINTS.ADMIN_LEADS}?export=csv&auth=${encodeURIComponent(token)}`;
+    setIsExportingCsv(true);
+
+    try {
+      const res = await fetch(`${API_ENDPOINTS.ADMIN_LEADS}?export=csv`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        alert('Failed to export leads. Please verify authorization.');
+        return;
+      }
+
+      const blob = await res.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = `sme_leads_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(downloadUrl);
+      document.body.removeChild(a);
+    } catch {
+      alert('Network error while exporting CSV file.');
+    } finally {
+      setIsExportingCsv(false);
+    }
+  };
+
+  // Save Package Tuition to real MySQL database
+  const handleSavePackages = async () => {
+    const token = localStorage.getItem('sme_admin_token');
+    if (!token) return;
+    setIsSavingPackages(true);
+    setPackagesSaveStatus('');
+    setPackagesError('');
+
+    try {
+      const res = await fetch(API_ENDPOINTS.ADMIN_PACKAGES, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          silver: silverPrice,
+          gold: goldPrice,
+          platinum: platinumPrice,
+        }),
+      });
+
+      const data = await res.json().catch(() => null);
+      if (res.ok && data?.success) {
+        setPackagesSaveStatus('Package tuition pricing successfully saved in MySQL database.');
+        setTimeout(() => setPackagesSaveStatus(''), 4000);
+      } else {
+        setPackagesError(data?.error || 'Database operation failed. Could not save package prices.');
+      }
+    } catch {
+      setPackagesError('Network error connecting to packages API.');
+    } finally {
+      setIsSavingPackages(false);
+    }
+  };
+
+  // Save Popup settings to real MySQL database
+  const handleSavePopupSettings = async () => {
+    const token = localStorage.getItem('sme_admin_token');
+    if (!token) return;
+    setIsSavingPopup(true);
+    setPopupStatusMsg('');
+    setPopupError('');
+
+    try {
+      const res = await fetch(API_ENDPOINTS.ADMIN_SETTINGS, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          popup_enabled: popupEnabled ? '1' : '0',
+          popup_delay_seconds: popupDelay,
+          popup_frequency_hours: popupFrequencyHours,
+          popup_heading: popupHeading,
+        }),
+      });
+
+      const data = await res.json().catch(() => null);
+      if (res.ok && data?.success) {
+        setPopupStatusMsg('Popup settings successfully saved in MySQL database.');
+        setTimeout(() => setPopupStatusMsg(''), 4000);
+      } else {
+        setPopupError(data?.error || 'Database operation failed. Could not save settings.');
+      }
+    } catch {
+      setPopupError('Network error connecting to settings API.');
+    } finally {
+      setIsSavingPopup(false);
+    }
   };
 
   // -----------------------------------------------------------
@@ -487,7 +665,7 @@ export default function AdminDashboardPage() {
                   type="button"
                   onClick={() => loadLeads()}
                   disabled={isLoadingLeads}
-                  className="touch-target px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer"
+                  className="touch-target px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${isLoadingLeads ? 'animate-spin text-[#176B55]' : ''}`} />
                   <span>{isLoadingLeads ? 'Loading...' : 'Refresh'}</span>
@@ -495,10 +673,11 @@ export default function AdminDashboardPage() {
                 <button
                   type="button"
                   onClick={exportLeadsToCsv}
-                  className="touch-target px-4 py-2 rounded-xl bg-[#176B55] hover:bg-[#125543] text-xs font-bold text-white flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  disabled={isExportingCsv}
+                  className="touch-target px-4 py-2 rounded-xl bg-[#176B55] hover:bg-[#125543] text-xs font-bold text-white flex items-center gap-1.5 shadow-xs cursor-pointer disabled:opacity-50"
                 >
                   <Download className="w-3.5 h-3.5" />
-                  <span>Export CSV</span>
+                  <span>{isExportingCsv ? 'Exporting...' : 'Export CSV'}</span>
                 </button>
               </div>
             </div>
@@ -598,10 +777,10 @@ export default function AdminDashboardPage() {
                 type="button"
                 onClick={() => loadContacts()}
                 disabled={isLoadingContacts}
-                className="touch-target px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer"
+                className="touch-target px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${isLoadingContacts ? 'animate-spin text-[#176B55]' : ''}`} />
-                <span>Refresh</span>
+                <span>{isLoadingContacts ? 'Loading...' : 'Refresh'}</span>
               </button>
             </div>
 
@@ -681,6 +860,12 @@ export default function AdminDashboardPage() {
               </div>
             )}
 
+            {packagesError && (
+              <div className="p-3 bg-red-50 border border-red-200 text-xs font-bold text-red-700 rounded-xl">
+                {packagesError}
+              </div>
+            )}
+
             <div className="space-y-4">
               <div className="p-4 rounded-xl border border-slate-200 flex items-center justify-between">
                 <div>
@@ -738,13 +923,11 @@ export default function AdminDashboardPage() {
 
             <button
               type="button"
-              onClick={() => {
-                setPackagesSaveStatus('Package pricing synchronized with database.');
-                setTimeout(() => setPackagesSaveStatus(''), 3000);
-              }}
-              className="px-6 py-2.5 rounded-xl bg-[#176B55] hover:bg-[#125543] text-white text-xs font-bold transition-colors cursor-pointer"
+              onClick={handleSavePackages}
+              disabled={isSavingPackages}
+              className="px-6 py-2.5 rounded-xl bg-[#176B55] hover:bg-[#125543] text-white text-xs font-bold transition-colors cursor-pointer disabled:opacity-50"
             >
-              Save Tuition Changes
+              {isSavingPackages ? 'Saving to Database...' : 'Save Tuition Changes'}
             </button>
           </div>
         )}
@@ -755,7 +938,7 @@ export default function AdminDashboardPage() {
             <div>
               <h2 className="text-xl font-bold text-[#142B45]">Lead Inquiry Popup Controls</h2>
               <p className="text-xs text-slate-500 mt-1">
-                Configure timing and messaging of the automated educational modal.
+                Configure timing and messaging of the automated educational modal stored in MySQL.
               </p>
             </div>
 
@@ -765,11 +948,17 @@ export default function AdminDashboardPage() {
               </div>
             )}
 
+            {popupError && (
+              <div className="p-3 bg-red-50 border border-red-200 text-xs font-bold text-red-700 rounded-xl">
+                {popupError}
+              </div>
+            )}
+
             <div className="space-y-5">
               <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200">
                 <div>
                   <strong className="text-sm text-slate-900 block">Enable Automated Lead Popup</strong>
-                  <span className="text-xs text-slate-500">Triggers after 1 second for educational visitors.</span>
+                  <span className="text-xs text-slate-500">Displays once per user within the frequency window.</span>
                 </div>
                 <input
                   type="checkbox"
@@ -792,7 +981,7 @@ export default function AdminDashboardPage() {
                     onChange={(e) => setPopupDelay(Number(e.target.value))}
                     className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
                   />
-                  <span className="text-[11px] text-slate-400">Current setting: 1 second.</span>
+                  <span className="text-[11px] text-slate-400">Default: 3 seconds.</span>
                 </div>
                 <div>
                   <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
@@ -825,13 +1014,11 @@ export default function AdminDashboardPage() {
 
             <button
               type="button"
-              onClick={() => {
-                setPopupStatusMsg('Popup settings saved successfully.');
-                setTimeout(() => setPopupStatusMsg(''), 3000);
-              }}
-              className="px-6 py-2.5 rounded-xl bg-[#176B55] hover:bg-[#125543] text-white text-xs font-bold transition-colors cursor-pointer"
+              onClick={handleSavePopupSettings}
+              disabled={isSavingPopup}
+              className="px-6 py-2.5 rounded-xl bg-[#176B55] hover:bg-[#125543] text-white text-xs font-bold transition-colors cursor-pointer disabled:opacity-50"
             >
-              Update Popup Settings
+              {isSavingPopup ? 'Saving to Database...' : 'Update Popup Settings'}
             </button>
           </div>
         )}

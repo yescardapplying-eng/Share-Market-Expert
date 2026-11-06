@@ -1,8 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
-import { Calendar, Clock, ArrowRight, BookOpen, ShieldCheck } from 'lucide-react';
+import { Calendar, Clock, ArrowRight, ShieldCheck } from 'lucide-react';
 import { BLOG_POSTS } from '@/data/blogArticles';
 
 export const metadata: Metadata = {

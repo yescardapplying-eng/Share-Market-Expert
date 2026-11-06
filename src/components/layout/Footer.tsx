@@ -11,7 +11,6 @@ import {
   InstagramIcon,
   FacebookIcon,
   YoutubeIcon,
-  LinkedinIcon,
 } from '@/components/icons/SocialIcons';
 
 export default function Footer() {
@@ -187,47 +186,47 @@ export default function Footer() {
               </li>
             </ul>
 
-            <div className="pt-2">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Connect With Us</p>
-              <div className="flex items-center gap-2">
-                <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-lg bg-[#142B45] hover:bg-[#176B55] text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-[#1F3858]"
-                  aria-label="Instagram (Opens in new window)"
-                >
-                  <InstagramIcon className="w-4 h-4" />
-                </a>
-                <a
-                  href="https://facebook.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-lg bg-[#142B45] hover:bg-[#176B55] text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-[#1F3858]"
-                  aria-label="Facebook (Opens in new window)"
-                >
-                  <FacebookIcon className="w-4 h-4" />
-                </a>
-                <a
-                  href="https://youtube.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-lg bg-[#142B45] hover:bg-[#176B55] text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-[#1F3858]"
-                  aria-label="YouTube (Opens in new window)"
-                >
-                  <YoutubeIcon className="w-4 h-4" />
-                </a>
-                <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-lg bg-[#142B45] hover:bg-[#176B55] text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-[#1F3858]"
-                  aria-label="LinkedIn (Opens in new window)"
-                >
-                  <LinkedinIcon className="w-4 h-4" />
-                </a>
+            {/* Official Social Media Channels - Rendered only when real, verified profile URLs are configured */}
+            {process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM || process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK || process.env.NEXT_PUBLIC_SOCIAL_YOUTUBE ? (
+              <div className="pt-2">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Connect With Us</p>
+                <div className="flex items-center gap-2">
+                  {process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM && (
+                    <a
+                      href={process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-9 h-9 rounded-lg bg-[#142B45] hover:bg-[#176B55] text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-[#1F3858]"
+                      aria-label="Instagram (Opens in new window)"
+                    >
+                      <InstagramIcon className="w-4 h-4" />
+                    </a>
+                  )}
+                  {process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK && (
+                    <a
+                      href={process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-9 h-9 rounded-lg bg-[#142B45] hover:bg-[#176B55] text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-[#1F3858]"
+                      aria-label="Facebook (Opens in new window)"
+                    >
+                      <FacebookIcon className="w-4 h-4" />
+                    </a>
+                  )}
+                  {process.env.NEXT_PUBLIC_SOCIAL_YOUTUBE && (
+                    <a
+                      href={process.env.NEXT_PUBLIC_SOCIAL_YOUTUBE}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-9 h-9 rounded-lg bg-[#142B45] hover:bg-[#176B55] text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-[#1F3858]"
+                      aria-label="YouTube (Opens in new window)"
+                    >
+                      <YoutubeIcon className="w-4 h-4" />
+                    </a>
+                  )}
+                </div>
               </div>
-            </div>
+            ) : null}
           </div>
         </div>
       </div>

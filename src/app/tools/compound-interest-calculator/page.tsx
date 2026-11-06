@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Calculator, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export default function CompoundInterestCalculatorPage() {
   const [principal, setPrincipal] = useState<number>(100000);
@@ -164,7 +163,7 @@ export default function CompoundInterestCalculatorPage() {
           <h2 className="text-xl font-bold text-[#142B45] mb-6">Compound Interest FAQs</h2>
           <div className="space-y-4 text-xs sm:text-sm text-slate-700">
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-              <h3 className="font-bold text-[#142B45] mb-1">What is the "Rule of 72"?</h3>
+              <h3 className="font-bold text-[#142B45] mb-1">What is the &quot;Rule of 72&quot;?</h3>
               <p className="text-slate-600">The Rule of 72 is a quick mental math shortcut: divide 72 by the annual interest rate to find approximately how many years it will take for your money to double. (e.g., at 12% return, 72 ÷ 12 = 6 years to double).</p>
             </div>
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">

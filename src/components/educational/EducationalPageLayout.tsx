@@ -6,11 +6,7 @@ import {
   ChevronDown,
   BookOpen,
   ShieldAlert,
-  ArrowRight,
   Clock,
-  Compass,
-  CheckCircle2,
-  Share2,
 } from 'lucide-react';
 
 export interface EducationalSection {
@@ -209,7 +205,7 @@ export default function EducationalPageLayout({
                 Page Table of Contents
               </h3>
               <ul className="space-y-2 text-xs font-semibold text-slate-600">
-                {sections.map((sec, i) => (
+                {sections.map((sec) => (
                   <li key={sec.id}>
                     <a
                       href={`#${sec.id}`}

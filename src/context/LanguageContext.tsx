@@ -16,12 +16,18 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<LanguageCode>('en');
 
   useEffect(() => {
-    const saved = localStorage.getItem('sme_lang') as LanguageCode;
-    if (saved && translations[saved]) {
-      setLanguageState(saved);
-      document.documentElement.lang = saved;
-    } else {
-      document.documentElement.lang = 'en';
+    try {
+      const saved = localStorage.getItem('sme_lang') as LanguageCode;
+      if (saved && translations[saved]) {
+        setTimeout(() => {
+          setLanguageState(saved);
+        }, 0);
+        document.documentElement.lang = saved;
+      } else {
+        document.documentElement.lang = 'en';
+      }
+    } catch {
+      // Ignore localStorage access restrictions
     }
   }, []);
 

@@ -4,10 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   Check,
-  ShieldCheck,
-  Award,
   Sparkles,
-  HelpCircle,
   AlertCircle,
   ArrowRight,
   ChevronDown,

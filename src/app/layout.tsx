@@ -100,12 +100,6 @@ export default function RootLayout({
     },
     telephone: '+917039654680',
     email: 'info@sharemarketexpert.in',
-    sameAs: [
-      'https://instagram.com',
-      'https://facebook.com',
-      'https://youtube.com',
-      'https://linkedin.com',
-    ],
   };
 
   return (

@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { BookOpen, CheckCircle, Award, Sparkles, BarChart2 } from 'lucide-react';
+import React from 'react';
+import { BookOpen, CheckCircle, Award } from 'lucide-react';
 
 interface SyllabusModule {
   name: string;
@@ -20,8 +20,6 @@ const SAMPLE_CURRICULUM_TRACK: SyllabusModule[] = [
 ];
 
 export default function EducationalProgressVisual() {
-  const [activeTab, setActiveTab] = useState<'syllabus' | 'skills'>('syllabus');
-
   return (
     <section className="py-16 sm:py-24 bg-white border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -83,7 +81,7 @@ export default function EducationalProgressVisual() {
 
               {/* Progress Rows */}
               <div className="space-y-4 pt-6">
-                {SAMPLE_CURRICULUM_TRACK.map((m, idx) => (
+                {SAMPLE_CURRICULUM_TRACK.map((m) => (
                   <div key={m.name} className="space-y-1.5">
                     <div className="flex items-center justify-between text-xs sm:text-sm">
                       <span className="font-semibold text-slate-200">{m.name}</span>

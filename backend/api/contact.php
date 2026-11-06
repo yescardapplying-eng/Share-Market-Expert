@@ -49,6 +49,12 @@ if (!isValidIndianMobile($mobileNumber)) {
     sendJsonResponse(400, ['success' => false, 'error' => 'Please provide a valid 10-digit Indian mobile number.']);
 }
 
+// Server-side validation of mandatory privacy and educational consent
+$consentGiven = !empty($input['consent']) && ($input['consent'] === true || $input['consent'] === '1' || $input['consent'] === 1);
+if (!$consentGiven) {
+    sendJsonResponse(400, ['success' => false, 'error' => 'You must accept the privacy consent declaration to submit your message.']);
+}
+
 try {
     $stmt = $db->prepare("
         INSERT INTO `contacts` (`full_name`, `mobile_number`, `state`, `message`, `ip_address`, `status`)

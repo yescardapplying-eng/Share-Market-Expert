@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, Bot, ShieldAlert, Sparkles, BookOpen, ExternalLink } from 'lucide-react';
+import { X, Send, Bot, ShieldAlert, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
 interface ChatMessage {
@@ -78,7 +78,7 @@ export default function EducationalChatbot() {
     // Process reply based on educational knowledge base
     setTimeout(() => {
       const lower = query.toLowerCase();
-      let matched = FAQ_KNOWLEDGE_BASE.find((k) =>
+      const matched = FAQ_KNOWLEDGE_BASE.find((k) =>
         k.triggers.some((trig) => lower.includes(trig))
       );
 

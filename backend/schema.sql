@@ -164,21 +164,10 @@ CREATE TABLE IF NOT EXISTS `settings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ==============================================================
--- INITIAL SEED DATA
+-- INITIAL SEED DATA (Non-Sensitive Configuration & Packages)
+-- Note: Admin accounts are NOT seeded here to ensure production security.
+-- Use `backend/scripts/create_admin.php` to securely create administrative users.
 -- ==============================================================
-
--- Seed Initial Super Admin
--- Username: admin_sme
--- Email: admin@sharemarketexpert.in
--- Default Password: 'SMEAdmin2026!#' (Hashed via PHP BCRYPT)
-INSERT INTO `admins` (`username`, `email`, `password_hash`, `role`, `is_active`)
-VALUES (
-  'admin_sme',
-  'admin@sharemarketexpert.in',
-  '$2y$12$1l56bS8L.Pi942dfAfQABu4XM6OJrCNGjL.vubUo01KAUGgomopaG',
-  'super_admin',
-  1
-) ON DUPLICATE KEY UPDATE `password_hash` = VALUES(`password_hash`);
 
 -- Seed Confirmed Packages (Silver: 24,999, Gold: 42,999, Platinum: 79,999)
 INSERT INTO `packages` (`slug`, `name`, `price_inr`, `duration_text`, `is_popular`, `short_description`, `features_json`, `display_order`) VALUES

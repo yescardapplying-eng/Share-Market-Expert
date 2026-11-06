@@ -40,7 +40,7 @@ const ABOUT_FAQS = [
   },
   {
     q: 'Where are your learning cohorts conducted?',
-    a: 'We conduct both online interactive webinars for learners across India and offline educational workshops from our registered academic center in Vashi, Navi Mumbai, Maharashtra.',
+    a: 'We conduct structured online interactive cohorts for learners across India, with our educational counseling desk and registered office based in Vashi, Navi Mumbai, Maharashtra.',
   },
   {
     q: 'Do you offer stock recommendations, tips, or calls via WhatsApp/Telegram?',
@@ -126,7 +126,7 @@ export default function AboutUsPage() {
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-white">Academic Curriculum</h3>
-                    <p className="text-[11px] text-slate-300">Vashi, Navi Mumbai Studio</p>
+                    <p className="text-[11px] text-slate-300">Vashi, Navi Mumbai Desk</p>
                   </div>
                 </div>
                 <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-semibold border border-emerald-500/30">

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 // Next.js Production Server for Hostinger Node.js Web App Deployment
 const { createServer } = require('http');
 const { parse } = require('url');
@@ -29,3 +30,4 @@ app.prepare().then(() => {
       console.log(`> Share Market Expert is running on http://${hostname}:${port}`);
     });
 });
+

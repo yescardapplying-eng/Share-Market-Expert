@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Percent, ArrowRight, ShieldCheck } from 'lucide-react';
 
 type SegmentType = 'delivery' | 'intraday' | 'futures';
 
@@ -11,7 +10,7 @@ export default function BrokerageCalculatorPage() {
   const [buyPrice, setBuyPrice] = useState<number>(500);
   const [sellPrice, setSellPrice] = useState<number>(520);
   const [quantity, setQuantity] = useState<number>(100);
-  const [brokeragePerOrder, setBrokeragePerOrder] = useState<number>(20);
+  const [brokeragePerOrder] = useState<number>(20);
 
   const buyTurnover = buyPrice * quantity;
   const sellTurnover = sellPrice * quantity;
@@ -236,7 +235,7 @@ export default function BrokerageCalculatorPage() {
               <p className="text-slate-600">GST at 18% is not charged on the value of shares, but on the financial services consumed: specifically brokerage commission, exchange turnover charges, and clearing fees.</p>
             </div>
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-              <h3 className="font-bold text-[#142B45] mb-1">What is the "breakeven point"?</h3>
+              <h3 className="font-bold text-[#142B45] mb-1">What is the &quot;breakeven point&quot;?</h3>
               <p className="text-slate-600">The breakeven point is the minimum price increase per share required purely to cover all statutory charges and brokerage so that your net trade outcome is zero.</p>
             </div>
           </div>

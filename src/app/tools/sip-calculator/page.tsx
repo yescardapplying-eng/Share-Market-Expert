@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { DollarSign, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
 
 export default function SipCalculatorPage() {
   const [monthlyInvestment, setMonthlyInvestment] = useState<number>(5000);

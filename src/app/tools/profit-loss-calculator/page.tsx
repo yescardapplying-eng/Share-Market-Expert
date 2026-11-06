@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { TrendingUp, TrendingDown, ArrowRight } from 'lucide-react';
 
 export default function ProfitLossCalculatorPage() {
   const [buyPrice, setBuyPrice] = useState<number>(250);

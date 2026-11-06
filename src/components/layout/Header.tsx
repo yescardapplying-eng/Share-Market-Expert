@@ -12,14 +12,14 @@ export default function Header() {
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const { language, setLanguage, t, supportedLanguages } = useLanguage();
-  const langRef = useRef<HTMLDivElement>(null);
-
-  // Close menus on path change
-  useEffect(() => {
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
     setMobileMenuOpen(false);
     setLangMenuOpen(false);
-  }, [pathname]);
+  }
+  const { language, setLanguage, t, supportedLanguages } = useLanguage();
+  const langRef = useRef<HTMLDivElement>(null);
 
   // Handle scroll state for sticky header shadow/blur
   useEffect(() => {

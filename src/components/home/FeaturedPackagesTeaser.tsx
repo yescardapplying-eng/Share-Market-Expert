@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Package, ArrowRight, ShieldCheck, Check } from 'lucide-react';
+import { Package, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export default function FeaturedPackagesTeaser() {
   return (

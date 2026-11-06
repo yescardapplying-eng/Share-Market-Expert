@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ShieldCheck, ChevronDown, Scale, AlertCircle } from 'lucide-react';
+import { ChevronDown, Scale, AlertCircle } from 'lucide-react';
 
 interface LegalSection {
   title: string;

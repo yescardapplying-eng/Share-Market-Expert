@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ShieldCheck, HelpCircle, ArrowRight, Calculator } from 'lucide-react';
 
 export default function PositionSizingCalculatorPage() {
   const [accountCapital, setAccountCapital] = useState<number>(100000);
