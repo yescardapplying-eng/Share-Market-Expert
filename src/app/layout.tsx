@@ -5,6 +5,7 @@ import Footer from '@/components/layout/Footer';
 import LeadEnquiryModal from '@/components/popups/LeadEnquiryModal';
 import EducationalChatbot from '@/components/chat/EducationalChatbot';
 import MouseCursorEffect from '@/components/ui/MouseCursorEffect';
+import ScrollAnimationObserver from '@/components/ui/ScrollAnimationObserver';
 import { LanguageProvider } from '@/context/LanguageContext';
 
 export const metadata: Metadata = {
@@ -115,6 +116,7 @@ export default function RootLayout({
         />
         <LanguageProvider>
           <MouseCursorEffect />
+          <ScrollAnimationObserver />
           <Header />
           <main className="flex-1 w-full max-w-full overflow-x-hidden">{children}</main>
           <Footer />

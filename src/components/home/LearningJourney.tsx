@@ -71,12 +71,12 @@ export default function LearningJourney() {
 
         {/* 6 Steps Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {JOURNEY_STEPS.map((s) => {
+          {JOURNEY_STEPS.map((s, idx) => {
             const Icon = s.icon;
             return (
               <div
                 key={s.step}
-                className="relative bg-gradient-to-b from-[#142B45] to-[#10243B] p-6 sm:p-7 rounded-2xl border border-[#1F3858] hover:border-[#1CA37E]/50 transition-all group"
+                className={`relative bg-gradient-to-b from-[#142B45] to-[#10243B] p-6 sm:p-7 rounded-2xl border border-[#1F3858] hover:border-[#1CA37E]/50 card-hover-lift reveal-on-scroll stagger-${idx + 1} transition-all group`}
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-10 h-10 rounded-xl bg-[#176B55]/40 text-[#1CA37E] flex items-center justify-center border border-[#1CA37E]/30 group-hover:bg-[#176B55] group-hover:text-white transition-colors">

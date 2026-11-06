@@ -232,7 +232,7 @@ export default function LeadEnquiryModal() {
       aria-modal="true"
       aria-labelledby="modal-title"
     >
-      <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden transform transition-all duration-200">
+      <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden transform transition-all duration-200 animate-modal-in">
         {/* Header Ribbon */}
         <div className="bg-[#142B45] text-white p-5 pr-12 relative border-b border-[#1F3858]">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#176B55] text-xs font-semibold text-white mb-2">

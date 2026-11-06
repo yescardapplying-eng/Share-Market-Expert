@@ -250,8 +250,8 @@ export default function Header() {
 
       {/* Mobile Language Dropdown Modal */}
       {langMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-xs shadow-2xl border border-slate-100 p-4">
+        <div className="lg:hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl w-full max-w-xs shadow-2xl border border-slate-100 p-4 animate-modal-in">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <span className="font-bold text-slate-800 text-base">Select Language</span>
               <button
@@ -289,7 +289,7 @@ export default function Header() {
 
       {/* Mobile Drawer Navigation (Slide-in, no horizontal overflow, 320px safe) */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-x-0 top-[112px] bottom-0 z-40 bg-white/95 backdrop-blur-md overflow-y-auto border-t border-slate-200 p-6 flex flex-col justify-between">
+        <div className="lg:hidden fixed inset-x-0 top-[112px] bottom-0 z-40 bg-white/95 backdrop-blur-md overflow-y-auto border-t border-slate-200 p-6 flex flex-col justify-between animate-fade-in">
           <div className="space-y-2">
             <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Main Navigation</p>
             {navLinks.map((link) => {

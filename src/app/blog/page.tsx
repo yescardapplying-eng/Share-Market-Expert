@@ -60,10 +60,10 @@ export default function BlogListingPage() {
 
         {/* Blog Posts Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          {BLOG_POSTS.map((post) => (
+          {BLOG_POSTS.map((post, pIdx) => (
             <article
               key={post.slug}
-              className="bg-white rounded-3xl p-7 border border-slate-200 shadow-sm hover:shadow-xl hover:border-[#176B55]/50 transition-all flex flex-col justify-between"
+              className={`bg-white rounded-3xl p-7 border border-slate-200 shadow-sm hover:shadow-xl hover:border-[#176B55]/50 card-hover-lift reveal-on-scroll stagger-${pIdx + 1} transition-all flex flex-col justify-between`}
             >
               <div>
                 <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mb-4">

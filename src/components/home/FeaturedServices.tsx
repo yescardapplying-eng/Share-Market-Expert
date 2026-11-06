@@ -75,12 +75,12 @@ export default function FeaturedServices() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {FEATURED_SERVICES.map((s) => {
+          {FEATURED_SERVICES.map((s, idx) => {
             const Icon = s.icon;
             return (
               <div
                 key={s.title}
-                className="bg-slate-50 rounded-2xl p-6 sm:p-8 border border-slate-200 flex flex-col justify-between hover:border-[#176B55]/40 hover:shadow-lg transition-all"
+                className={`bg-slate-50 rounded-2xl p-6 sm:p-8 border border-slate-200 flex flex-col justify-between hover:border-[#176B55]/40 hover:shadow-lg card-hover-lift reveal-on-scroll stagger-${idx + 1} transition-all`}
               >
                 <div>
                   <div className="flex items-start justify-between gap-4 mb-4">

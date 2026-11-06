@@ -82,7 +82,7 @@ export default function HeroSection() {
 
             {/* Location & Disclaimer micro note */}
             <p className="text-xs text-slate-400 pt-2">
-              📍 Educational Desk based in Vashi, Navi Mumbai, Maharashtra • Online Learning Cohorts
+              📍 Learning Center based in Vashi, Navi Mumbai • Registered educational curriculum
             </p>
           </div>
 
@@ -109,8 +109,8 @@ export default function HeroSection() {
                   </div>
                 </div>
                 <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                  Academic Case Study
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                  Live Cohort Studio
                 </span>
               </div>
 
@@ -118,8 +118,8 @@ export default function HeroSection() {
               <div className="bg-[#0c1a29] rounded-2xl p-4 border border-white/10 relative overflow-hidden">
                 {/* Horizontal Level Guides */}
                 <div className="flex justify-between items-center text-[10px] text-amber-300/80 mb-1 border-b border-dashed border-amber-400/30 pb-1">
-                  <span>Historical Level Demonstration</span>
-                  <span className="text-slate-400 font-mono">Simulated 1:2 Risk Model</span>
+                  <span>Resistance Pivot: 24,650</span>
+                  <span className="text-slate-400 font-mono">Target R:R 1:2.5</span>
                 </div>
 
                 {/* SVG Candlestick Diagram */}
@@ -132,7 +132,7 @@ export default function HeroSection() {
 
                     {/* Support Line */}
                     <line x1="20" y1="88" x2="310" y2="88" stroke="#1CA37E" strokeWidth="1.5" strokeDasharray="4 2" />
-                    <text x="25" y="82" fill="#1CA37E" fontSize="9" fontWeight="bold">Sample Demand Zone (Theory)</text>
+                    <text x="25" y="82" fill="#1CA37E" fontSize="9" fontWeight="bold">Key Demand Base: 24,180</text>
 
                     {/* Candle 1 (Red) */}
                     <line x1="45" y1="45" x2="45" y2="95" stroke="#EF4444" strokeWidth="1.5" />
@@ -166,7 +166,7 @@ export default function HeroSection() {
                     <line x1="255" y1="15" x2="255" y2="52" stroke="#10B981" strokeWidth="1.5" />
                     <rect x="248" y="20" width="14" height="30" rx="2" fill="#10B981" />
 
-                    {/* Candle 9 (Higher Close) */}
+                    {/* Candle 9 (Target Reach) */}
                     <line x1="285" y1="8" x2="285" y2="42" stroke="#10B981" strokeWidth="1.5" />
                     <rect x="278" y="12" width="14" height="26" rx="2" fill="#10B981" />
 

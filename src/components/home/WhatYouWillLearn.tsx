@@ -89,13 +89,13 @@ export default function WhatYouWillLearn() {
 
         {/* 6 Educational Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {LEARNING_CARDS.map((card) => {
+          {LEARNING_CARDS.map((card, idx) => {
             const Icon = card.icon;
             return (
               <Link
                 key={card.title}
                 href={card.href}
-                className="group relative bg-slate-50 hover:bg-white rounded-2xl p-6 sm:p-7 border border-slate-200/90 hover:border-[#176B55]/40 hover:shadow-xl transition-all duration-200 flex flex-col justify-between"
+                className={`group relative bg-slate-50 hover:bg-white rounded-2xl p-6 sm:p-7 border border-slate-200/90 hover:border-[#176B55]/40 hover:shadow-xl card-hover-lift reveal-on-scroll stagger-${idx + 1} transition-all duration-200 flex flex-col justify-between`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-5">

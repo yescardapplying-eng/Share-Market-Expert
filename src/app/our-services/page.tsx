@@ -199,10 +199,10 @@ export default function OurServicesPage() {
 
         {/* Service Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
-          {SERVICES.map((s) => (
+          {SERVICES.map((s, sIdx) => (
             <div
               key={s.id}
-              className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm hover:shadow-xl hover:border-[#176B55]/50 transition-all duration-200 flex flex-col justify-between"
+              className={`bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm hover:shadow-xl hover:border-[#176B55]/50 card-hover-lift reveal-on-scroll stagger-${sIdx + 1} transition-all duration-200 flex flex-col justify-between`}
             >
               <div>
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-4">

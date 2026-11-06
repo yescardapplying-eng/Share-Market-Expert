@@ -65,12 +65,12 @@ export default function WhyLearnWithUs() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {HONEST_BENEFITS.map((b) => {
+          {HONEST_BENEFITS.map((b, idx) => {
             const Icon = b.icon;
             return (
               <div
                 key={b.title}
-                className="bg-white rounded-2xl p-6 sm:p-7 border border-slate-200 shadow-xs hover:border-[#176B55]/50 hover:shadow-md transition-all"
+                className={`bg-white rounded-2xl p-6 sm:p-7 border border-slate-200 shadow-xs hover:border-[#176B55]/50 hover:shadow-md card-hover-lift reveal-on-scroll stagger-${idx + 1} transition-all`}
               >
                 <div className="w-12 h-12 rounded-xl bg-[#EBF5F2] text-[#176B55] flex items-center justify-center mb-5">
                   <Icon className="w-6 h-6" />

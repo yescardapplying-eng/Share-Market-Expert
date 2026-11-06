@@ -102,13 +102,13 @@ export default function ToolsHubPage() {
 
         {/* Tools Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16">
-          {CALCULATOR_TOOLS.map((tool) => {
+          {CALCULATOR_TOOLS.map((tool, tIdx) => {
             const Icon = tool.icon;
             return (
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="group bg-white rounded-2xl p-6 sm:p-7 border border-slate-200 shadow-sm hover:shadow-xl hover:border-[#176B55]/50 transition-all flex flex-col justify-between"
+                className={`group bg-white rounded-2xl p-6 sm:p-7 border border-slate-200 shadow-sm hover:shadow-xl hover:border-[#176B55]/50 card-hover-lift reveal-on-scroll stagger-${tIdx + 1} transition-all flex flex-col justify-between`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">

@@ -151,10 +151,10 @@ export default function OurPackagesPage() {
 
         {/* 3 Package Pricing Dashboard Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch mb-20">
-          {PACKAGES.map((pkg) => (
+          {PACKAGES.map((pkg, idx) => (
             <div
               key={pkg.id}
-              className={`rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 relative ${
+              className={`rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 relative card-hover-lift reveal-on-scroll stagger-${idx + 1} ${
                 pkg.isPopular
                   ? 'bg-white border-2 border-[#176B55] shadow-2xl scale-100 lg:-translate-y-2'
                   : 'bg-white border border-slate-200 shadow-md hover:shadow-xl hover:border-slate-300'

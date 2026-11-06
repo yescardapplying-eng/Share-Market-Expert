@@ -32,10 +32,10 @@ export default function BlogArticlesSection() {
 
         {/* 4 Article Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {BLOG_POSTS.slice(0, 4).map((post) => (
+          {BLOG_POSTS.slice(0, 4).map((post, idx) => (
             <article
               key={post.slug}
-              className="bg-slate-50 rounded-2xl p-6 sm:p-7 border border-slate-200 hover:border-[#176B55]/50 hover:bg-white hover:shadow-xl transition-all duration-200 flex flex-col justify-between"
+              className={`bg-slate-50 rounded-2xl p-6 sm:p-7 border border-slate-200 hover:border-[#176B55]/50 hover:bg-white hover:shadow-xl card-hover-lift reveal-on-scroll stagger-${idx + 1} transition-all duration-200 flex flex-col justify-between`}
             >
               <div>
                 {/* Meta details */}
