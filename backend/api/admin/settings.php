@@ -40,7 +40,9 @@ if ($method === 'POST' || $method === 'PUT') {
 
     $allowedSettings = [
         'popup_enabled',
+        'popup_delay_ms',
         'popup_delay_seconds',
+        'popup_frequency_behaviour',
         'popup_frequency_hours',
         'popup_heading',
         'popup_subtitle',
@@ -49,6 +51,21 @@ if ($method === 'POST' || $method === 'PUT') {
     ];
 
     try {
+        // Enforce delay bounds: strictly 0 to 1000 ms (0 to 1.0 s)
+        if (isset($input['popup_delay_ms'])) {
+            $delayMs = max(0, min(1000, (int)$input['popup_delay_ms']));
+            $input['popup_delay_ms'] = $delayMs;
+            $input['popup_delay_seconds'] = round($delayMs / 1000, 2);
+        } elseif (isset($input['popup_delay_seconds'])) {
+            $delaySec = max(0.0, min(1.0, (float)$input['popup_delay_seconds']));
+            $input['popup_delay_seconds'] = $delaySec;
+            $input['popup_delay_ms'] = (int)round($delaySec * 1000);
+        }
+
+        // Always enforce every_page behavior
+        $input['popup_frequency_behaviour'] = 'every_page';
+        $input['popup_frequency_hours'] = 0;
+
         $stmt = $db->prepare("
             INSERT INTO `settings` (`setting_key`, `setting_value`)
             VALUES (:k, :v)
@@ -77,3 +94,4 @@ if ($method === 'POST' || $method === 'PUT') {
 }
 
 sendJsonResponse(405, ['success' => false, 'error' => 'Method Not Allowed']);
+

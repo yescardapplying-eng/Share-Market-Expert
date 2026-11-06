@@ -30,3 +30,4 @@ sendJsonResponse(200, [
     'success' => true,
     'message' => 'Session successfully revoked and logged out.'
 ]);
+

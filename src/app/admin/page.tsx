@@ -99,8 +99,7 @@ export default function AdminDashboardPage() {
 
   // Popup Settings State
   const [popupEnabled, setPopupEnabled] = useState(true);
-  const [popupDelay, setPopupDelay] = useState(3);
-  const [popupFrequencyHours, setPopupFrequencyHours] = useState(24);
+  const [popupDelayMs, setPopupDelayMs] = useState(1000);
   const [popupHeading, setPopupHeading] = useState('Share Market Expert');
   const [popupStatusMsg, setPopupStatusMsg] = useState('');
   const [popupError, setPopupError] = useState('');
@@ -232,8 +231,11 @@ export default function AdminDashboardPage() {
         if (json.success && json.data) {
           const d = json.data;
           setPopupEnabled(d.popup_enabled === '1' || d.popup_enabled === 1 || d.popup_enabled === true);
-          if (d.popup_delay_seconds) setPopupDelay(parseInt(d.popup_delay_seconds, 10));
-          if (d.popup_frequency_hours) setPopupFrequencyHours(parseInt(d.popup_frequency_hours, 10));
+          if (d.popup_delay_ms !== undefined && d.popup_delay_ms !== null) {
+            setPopupDelayMs(Math.min(1000, Math.max(0, parseInt(d.popup_delay_ms, 10))));
+          } else if (d.popup_delay_seconds !== undefined && d.popup_delay_seconds !== null) {
+            setPopupDelayMs(Math.min(1000, Math.max(0, Math.round(parseFloat(d.popup_delay_seconds) * 1000))));
+          }
           if (d.popup_heading) setPopupHeading(d.popup_heading);
         }
       }
@@ -410,6 +412,7 @@ export default function AdminDashboardPage() {
     setPopupError('');
 
     try {
+      const cappedDelay = Math.min(1000, Math.max(0, popupDelayMs));
       const res = await fetch(API_ENDPOINTS.ADMIN_SETTINGS, {
         method: 'POST',
         headers: {
@@ -419,8 +422,9 @@ export default function AdminDashboardPage() {
         },
         body: JSON.stringify({
           popup_enabled: popupEnabled ? '1' : '0',
-          popup_delay_seconds: popupDelay,
-          popup_frequency_hours: popupFrequencyHours,
+          popup_delay_ms: cappedDelay,
+          popup_delay_seconds: Math.min(1.0, Math.max(0, cappedDelay / 1000)),
+          popup_frequency_behaviour: 'every_page',
           popup_heading: popupHeading,
         }),
       });
@@ -968,34 +972,34 @@ export default function AdminDashboardPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
-                    Display Delay (Seconds)
+                    Display Delay (Milliseconds)
                   </label>
                   <input
                     type="number"
-                    min={1}
-                    max={30}
-                    value={popupDelay}
-                    onChange={(e) => setPopupDelay(Number(e.target.value))}
+                    min={0}
+                    max={1000}
+                    step={100}
+                    value={popupDelayMs}
+                    onChange={(e) => setPopupDelayMs(Math.min(1000, Math.max(0, Number(e.target.value))))}
                     className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
                   />
-                  <span className="text-[11px] text-slate-400">Default: 3 seconds.</span>
+                  <span className="text-[11px] text-slate-400">Default: 1000 ms (max: 1000 ms / 1 second). Set 0 for immediate display.</span>
                 </div>
                 <div>
                   <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
-                    Frequency Window (Hours)
+                    Popup Behaviour / Frequency
                   </label>
-                  <input
-                    type="number"
-                    min={1}
-                    max={168}
-                    value={popupFrequencyHours}
-                    onChange={(e) => setPopupFrequencyHours(Number(e.target.value))}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
-                  />
-                  <span className="text-[11px] text-slate-400">Default: 24 hours.</span>
+                  <select
+                    disabled
+                    value="every_page"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-slate-100 text-slate-700 cursor-not-allowed"
+                  >
+                    <option value="every_page">Every page visit &amp; refresh (Active requirement)</option>
+                  </select>
+                  <span className="text-[11px] text-emerald-600 font-semibold">Active: Triggers on every page load, refresh, and route change.</span>
                 </div>
               </div>
 

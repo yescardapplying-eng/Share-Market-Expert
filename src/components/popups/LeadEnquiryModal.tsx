@@ -7,8 +7,55 @@ import { INDIAN_STATES_AND_UTS, TRADING_SEGMENT_OPTIONS, CAPITAL_RANGE_OPTIONS }
 import { useLanguage } from '@/context/LanguageContext';
 import { API_ENDPOINTS } from '@/lib/api';
 
+interface CachedSettings {
+  enabled: boolean;
+  delayMs: number;
+  heading: string;
+}
+
+let cachedSettings: CachedSettings | null = null;
+let settingsPromise: Promise<CachedSettings> | null = null;
+
+async function fetchPopupSettings(): Promise<CachedSettings> {
+  if (cachedSettings) return cachedSettings;
+  if (settingsPromise) return settingsPromise;
+
+  settingsPromise = (async () => {
+    let enabled = true;
+    let delayMs = 1000;
+    let heading = 'Share Market Expert';
+
+    try {
+      const res = await fetch(API_ENDPOINTS.SETTINGS, { cache: 'no-store' });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.data) {
+          const d = json.data;
+          enabled = d.popup_enabled === true || d.popup_enabled === '1' || d.popup_enabled === 1;
+          if (d.popup_delay_ms !== undefined && d.popup_delay_ms !== null) {
+            delayMs = Math.min(1000, Math.max(0, parseInt(d.popup_delay_ms, 10)));
+          } else if (d.popup_delay_seconds !== undefined && d.popup_delay_seconds !== null) {
+            delayMs = Math.min(1000, Math.max(0, Math.round(parseFloat(d.popup_delay_seconds) * 1000)));
+          }
+          if (d.popup_heading) {
+            heading = d.popup_heading;
+          }
+        }
+      }
+    } catch {
+      // Safe fallback on network issue: active with 1000ms delay
+    }
+
+    cachedSettings = { enabled, delayMs, heading };
+    return cachedSettings;
+  })();
+
+  return settingsPromise;
+}
+
 export default function LeadEnquiryModal() {
   const pathname = usePathname();
+  const [prevPathname, setPrevPathname] = useState(pathname);
   const [isOpen, setIsOpen] = useState(false);
   const [modalHeading, setModalHeading] = useState('Share Market Expert');
   const [fullName, setFullName] = useState('');
@@ -17,69 +64,85 @@ export default function LeadEnquiryModal() {
   const [stateSearch, setStateSearch] = useState('');
   const [isStateDropdownOpen, setIsStateDropdownOpen] = useState(false);
   const [segment, setSegment] = useState('Option (Call-Put)');
-  const [capitalRange, setCapitalRange] = useState('Below Rs 50,000');
+  const [capitalRange, setCapitalRange] = useState('Above Rs 50,000');
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const { t } = useLanguage();
 
-  // Functional popup configuration from backend settings with frequency window check
+  // Reset modal state on pathname changes during render (avoids cascading effect renders)
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
+    setIsOpen(false);
+    setStatus('idle');
+    setErrorMessage('');
+  }
+
+  // Trigger popup on EVERY page visit, reload, and navigation within maximum 1 second
   useEffect(() => {
-    let isCancelled = false;
+    // Exclude admin pages completely
+    if (pathname && pathname.startsWith('/admin')) {
+      return;
+    }
+
+    let isMounted = true;
     let timer: NodeJS.Timeout | null = null;
 
-    const checkAndSchedulePopup = async () => {
-      let isEnabled = true;
-      let delaySeconds = 3;
-      let frequencyHours = 24;
-
-      try {
-        const res = await fetch(API_ENDPOINTS.SETTINGS, { cache: 'no-store' });
-        if (res.ok) {
-          const json = await res.json();
-          if (json.success && json.data) {
-            const d = json.data;
-            isEnabled = d.popup_enabled === true || d.popup_enabled === '1' || d.popup_enabled === 1;
-            delaySeconds = Math.max(1, parseInt(d.popup_delay_seconds || '3', 10));
-            frequencyHours = Math.max(1, parseInt(d.popup_frequency_hours || '24', 10));
-            if (d.popup_heading) {
-              setModalHeading(d.popup_heading);
-            }
-          }
-        }
-      } catch {
-        // Fallback to default 3s delay & 24h frequency
+    // Fast path: if settings already cached, use immediately
+    if (cachedSettings) {
+      if (!cachedSettings.enabled) {
+        return;
       }
-
-      if (isCancelled || !isEnabled) return;
-
-      // Check frequency window: prevent repeated display within configured frequency window
-      const lastClosed = localStorage.getItem('sme_popup_last_closed');
-      if (lastClosed) {
-        const elapsedHours = (Date.now() - parseInt(lastClosed, 10)) / (1000 * 60 * 60);
-        if (elapsedHours < frequencyHours) {
-          return; // Frequency window still active
-        }
-      }
-
+      const delay = Math.min(1000, Math.max(0, cachedSettings.delayMs));
       timer = setTimeout(() => {
-        if (!isCancelled) {
+        if (isMounted) {
+          if (cachedSettings?.heading) {
+            setModalHeading(cachedSettings.heading);
+          }
           setIsOpen(true);
         }
-      }, delaySeconds * 1000);
-    };
+      }, delay);
+    } else {
+      // First load: guarantee appearance within 1000ms max while fetching settings in background
+      timer = setTimeout(() => {
+        if (isMounted) setIsOpen(true);
+      }, 1000);
 
-    checkAndSchedulePopup();
+      fetchPopupSettings().then((settings) => {
+        if (!isMounted) return;
+        if (!settings.enabled) {
+          if (timer) clearTimeout(timer);
+          return;
+        }
+        const delay = Math.min(1000, Math.max(0, settings.delayMs));
+        if (delay < 1000) {
+          if (timer) clearTimeout(timer);
+          timer = setTimeout(() => {
+            if (isMounted) {
+              if (settings.heading) {
+                setModalHeading(settings.heading);
+              }
+              setIsOpen(true);
+            }
+          }, delay);
+        } else {
+          if (settings.heading) {
+            setModalHeading(settings.heading);
+          }
+        }
+      });
+    }
 
     return () => {
-      isCancelled = true;
-      if (timer) clearTimeout(timer);
+      isMounted = false;
+      if (timer) {
+        clearTimeout(timer);
+      }
     };
   }, [pathname]);
 
   const handleClose = () => {
+    // Closes only for the current page view; reappears on next visit, refresh or navigation
     setIsOpen(false);
-    // Record timestamp to enforce frequency window
-    localStorage.setItem('sme_popup_last_closed', Date.now().toString());
   };
 
   useEffect(() => {
@@ -125,7 +188,7 @@ export default function LeadEnquiryModal() {
           mobile_number: cleanPhone,
           state: selectedState || null,
           segment: segment || 'Option (Call-Put)',
-          capital_range: capitalRange || 'Below Rs 50,000',
+          capital_range: capitalRange || 'Above Rs 50,000',
           source_page: typeof window !== 'undefined' ? window.location.pathname : '/',
         }),
       });
@@ -143,7 +206,6 @@ export default function LeadEnquiryModal() {
 
       // Verified successful insertion in MySQL database
       setStatus('success');
-      localStorage.setItem('sme_popup_last_closed', Date.now().toString());
       setTimeout(() => {
         setIsOpen(false);
         setStatus('idle');
@@ -155,6 +217,11 @@ export default function LeadEnquiryModal() {
       );
     }
   };
+
+  // Exclude admin pages
+  if (pathname && pathname.startsWith('/admin')) {
+    return null;
+  }
 
   if (!isOpen) return null;
 

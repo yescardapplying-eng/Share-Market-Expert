@@ -70,3 +70,4 @@ try {
     echo "Database Error: " . $e->getMessage() . "\n";
     exit(1);
 }
+

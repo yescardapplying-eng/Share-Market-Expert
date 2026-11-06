@@ -68,3 +68,4 @@ if ($method === 'POST' || $method === 'PUT') {
 }
 
 sendJsonResponse(405, ['success' => false, 'error' => 'Method Not Allowed']);
+
