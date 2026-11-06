@@ -270,8 +270,8 @@ export default function ContactUsPage() {
                   <Phone className="w-5 h-5 text-[#1CA37E] shrink-0 mt-0.5" />
                   <div>
                     <strong className="block text-white">Telephone / WhatsApp:</strong>
-                    <a href="tel:+911234567890" className="hover:text-white transition-colors underline-offset-2 hover:underline">
-                      +91 12345 67890
+                    <a href="tel:+917039654680" className="hover:text-white transition-colors underline-offset-2 hover:underline">
+                      +91 70396 54680
                     </a>
                   </div>
                 </li>

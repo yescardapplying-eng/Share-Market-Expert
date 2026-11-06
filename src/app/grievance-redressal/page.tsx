@@ -33,7 +33,7 @@ export default function GrievanceRedressalPage() {
               <p><strong>Platform:</strong> Share Market Expert</p>
               <p><strong>Location:</strong> Vashi, Navi Mumbai, Maharashtra, India</p>
               <p><strong>Email for Grievances:</strong> <a href="mailto:info@sharemarketexpert.in" className="text-[#176B55] underline">info@sharemarketexpert.in</a> (Subject: &ldquo;Formal Grievance&rdquo;)</p>
-              <p><strong>Helpline:</strong> +91 12345 67890</p>
+              <p><strong>Helpline:</strong> <a href="tel:+917039654680" className="text-[#176B55] hover:underline">+91 70396 54680</a></p>
               <p><strong>Operating Hours:</strong> Monday to Saturday: 10:00 AM to 5:00 PM IST</p>
             </div>
           ),

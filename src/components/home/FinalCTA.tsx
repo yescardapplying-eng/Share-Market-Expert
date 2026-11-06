@@ -38,7 +38,7 @@ export default function FinalCTA() {
         </div>
 
         <p className="mt-6 text-xs text-slate-400">
-          Academic Helpline: +91 12345 67890 • Vashi, Navi Mumbai, Maharashtra
+          Academic Helpline: <a href="tel:+917039654680" className="text-slate-300 font-semibold hover:text-white underline-offset-2 hover:underline">+91 70396 54680</a> • Vashi, Navi Mumbai, Maharashtra
         </p>
       </div>
     </section>

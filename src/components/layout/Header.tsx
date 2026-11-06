@@ -94,7 +94,9 @@ export default function Header() {
             </span>
           </div>
           <div className="hidden sm:flex items-center gap-4 shrink-0 text-slate-300">
-            <span>Call: +91 12345 67890</span>
+            <a href="tel:+917039654680" className="hover:text-white transition-colors">
+              Call: +91 70396 54680
+            </a>
             <span className="text-slate-500">•</span>
             <Link href="/contact-us" className="hover:text-white transition-colors underline-offset-2 hover:underline">
               Student Helpdesk
@@ -323,7 +325,7 @@ export default function Header() {
 
             <div className="bg-slate-50 rounded-xl p-3 text-center border border-slate-200/80">
               <p className="text-xs font-medium text-slate-600">
-                Educational Helpdesk: <strong className="text-slate-800">+91 12345 67890</strong>
+                Educational Helpdesk: <a href="tel:+917039654680" className="text-slate-800 font-bold hover:text-[#176B55]">+91 70396 54680</a>
               </p>
               <p className="text-[11px] text-slate-500 mt-0.5">Vashi, Navi Mumbai, Maharashtra</p>
             </div>

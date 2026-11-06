@@ -98,7 +98,7 @@ export default function RootLayout({
       addressRegion: 'Navi Mumbai, Maharashtra',
       addressCountry: 'IN',
     },
-    telephone: '+911234567890',
+    telephone: '+917039654680',
     email: 'info@sharemarketexpert.in',
     sameAs: [
       'https://instagram.com',

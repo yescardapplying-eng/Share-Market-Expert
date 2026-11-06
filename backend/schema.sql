@@ -172,13 +172,13 @@ ON DUPLICATE KEY UPDATE `price_inr` = VALUES(`price_inr`);
 INSERT INTO `settings` (`setting_key`, `setting_value`) VALUES
 ('brand_name', 'Share Market Expert'),
 ('brand_location', 'Vashi, Navi Mumbai, Maharashtra, India'),
-('contact_phone', '+91 12345 67890'),
+('contact_phone', '+91 70396 54680'),
 ('contact_email', 'info@sharemarketexpert.in'),
 ('popup_enabled', '1'),
 ('popup_delay_seconds', '3'),
 ('popup_frequency_hours', '24'),
-('popup_heading', 'Begin Your Market Education'),
-('popup_subtitle', 'Connect with our educational counselors to choose the right learning module for your experience level.'),
+('popup_heading', 'Share Market Expert'),
+('popup_subtitle', ''),
 ('disclaimer_text', 'Share Market Expert is an educational platform and is NOT registered with SEBI as a Research Analyst or Investment Adviser. Nothing here is investment advice or a recommendation. Securities trading involves substantial risk of loss. Consult a SEBI-registered adviser before investing.'),
 ('noorweb_link', 'http://noorweb.in/')
 ON DUPLICATE KEY UPDATE `setting_value` = VALUES(`setting_value`);

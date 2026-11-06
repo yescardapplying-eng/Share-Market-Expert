@@ -57,7 +57,7 @@ export default function DeliveryAndAccessPage() {
       faqs={[
         {
           q: 'What should I do if I have not received my access email within 24 hours?',
-          a: 'Please check your email spam/promotions folder first. If credentials are still not found, contact our support desk immediately at +91 12345 67890 or email info@sharemarketexpert.in with your transaction details.',
+          a: 'Please check your email spam/promotions folder first. If credentials are still not found, contact our support desk immediately at +91 70396 54680 or email info@sharemarketexpert.in with your transaction details.',
         },
         {
           q: 'Can I access the student portal from a mobile smartphone?',

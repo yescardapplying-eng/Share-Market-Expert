@@ -39,7 +39,7 @@ const FAQ_KNOWLEDGE_BASE = [
   },
   {
     triggers: ['contact', 'location', 'phone', 'email', 'vashi', 'mumbai'],
-    reply: 'Our academic office is located in Vashi, Navi Mumbai, Maharashtra. You can reach our educational counselors at +91 12345 67890 or via email at info@sharemarketexpert.in.',
+    reply: 'Our academic office is located in Vashi, Navi Mumbai, Maharashtra. You can reach our educational counselors at +91 70396 54680 or via email at info@sharemarketexpert.in.',
     link: { label: 'Go to Contact Page', href: '/contact-us' },
   },
 ];

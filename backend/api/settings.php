@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 $settings = [
     'brand_name' => 'Share Market Expert',
     'brand_location' => 'Vashi, Navi Mumbai, Maharashtra, India',
-    'contact_phone' => '+91 12345 67890',
+    'contact_phone' => '+91 70396 54680',
     'contact_email' => 'info@sharemarketexpert.in',
     'popup_enabled' => true,
     'popup_delay_seconds' => 3,
