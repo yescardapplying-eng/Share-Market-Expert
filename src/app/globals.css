@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+:root {
+  --brand-navy: #142B45;
+  --brand-navy-dark: #0B1928;
+  --brand-navy-light: #1F3858;
+  --brand-teal: #176B55;
+  --brand-teal-hover: #125543;
+  --brand-teal-light: #EBF5F2;
+  --brand-teal-vivid: #1CA37E;
+  --brand-blue: #0080C8;
+  --neutral-bg: #F8FAFC;
+  --neutral-surface: #FFFFFF;
+  --neutral-border: #E2E8F0;
+  --neutral-border-subtle: #F1F5F9;
+  --text-primary: #0F172A;
+  --text-secondary: #334155;
+  --text-muted: #64748B;
+  --success: #15803D;
+  --warning: #B45309;
+  --danger: #B91C1C;
+}
+
+html {
+  scroll-behavior: smooth;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+body {
+  background-color: var(--neutral-bg);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Devanagari", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
+  font-size: 16px;
+  overflow-x: hidden;
+  max-width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure no child causes horizontal overflow */
+* {
+  box-sizing: border-box;
+}
+
+/* Responsive Logo Sizing */
+.brand-logo-header {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  max-width: 155px;
+  transition: max-width 0.2s ease;
+}
+
+@media (min-width: 390px) {
+  .brand-logo-header {
+    max-width: 175px;
+  }
+}
+
+@media (min-width: 600px) {
+  .brand-logo-header {
+    max-width: 210px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .brand-logo-header {
+    max-width: 250px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .brand-logo-header {
+    max-width: 280px;
+  }
+}
+
+/* Responsive Footer Logo Sizing */
+.brand-logo-footer {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  max-width: 220px;
+}
+
+/* Accessible Interactive Targets */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Focus Ring for WCAG AA */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--brand-teal);
+  outline-offset: 2px;
+}
+
+/* Reduced motion preference support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom Scrollbars for code/tables */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

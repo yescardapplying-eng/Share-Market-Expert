@@ -1,0 +1,16 @@
+# ==========================================
+# Robots.txt for Share Market Expert
+# Website: https://sharemarketexpert.in
+# ==========================================
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/admin/
+Disallow: /backend/
+
+# Host
+Host: https://sharemarketexpert.in
+
+# Sitemap
+Sitemap: https://sharemarketexpert.in/sitemap.xml
