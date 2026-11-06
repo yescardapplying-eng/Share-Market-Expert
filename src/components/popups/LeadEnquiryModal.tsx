@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { X, CheckCircle2, Shield, Lock, User, MapPin, TrendingUp, DollarSign } from 'lucide-react';
 import { INDIAN_STATES_AND_UTS, TRADING_SEGMENT_OPTIONS, CAPITAL_RANGE_OPTIONS } from '@/data/indianStates';
 import { useLanguage } from '@/context/LanguageContext';
+import { API_ENDPOINTS } from '@/lib/api';
 
 export default function LeadEnquiryModal() {
   const pathname = usePathname();
@@ -65,9 +66,12 @@ export default function LeadEnquiryModal() {
     setStatus('submitting');
 
     try {
-      const response = await fetch('/api/lead.php', {
+      const response = await fetch(API_ENDPOINTS.LEAD, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
         body: JSON.stringify({
           full_name: fullName.trim(),
           mobile_number: cleanPhone,
@@ -78,47 +82,28 @@ export default function LeadEnquiryModal() {
         }),
       });
 
-      if (!response.ok) {
-        console.warn('API returned non-200 status, recording lead locally.');
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok || !data?.success) {
+        setStatus('error');
+        setErrorMessage(
+          data?.error ||
+          'Unable to submit enquiry to database. Please check your details or contact our helpline at +91 70396 54680.'
+        );
+        return;
       }
 
-      // Store in backup local storage leads for admin inspection
-      const existingLeads = JSON.parse(localStorage.getItem('sme_local_leads') || '[]');
-      existingLeads.push({
-        id: Date.now(),
-        fullName: fullName.trim(),
-        mobileNumber: cleanPhone,
-        state: selectedState,
-        segment,
-        capitalRange,
-        date: new Date().toISOString(),
-      });
-      localStorage.setItem('sme_local_leads', JSON.stringify(existingLeads));
-
+      // Verified successful insertion in MySQL database
       setStatus('success');
       setTimeout(() => {
         setIsOpen(false);
         setStatus('idle');
       }, 3000);
     } catch {
-      // Even if network fails or backend is offline, store locally and show success
-      const existingLeads = JSON.parse(localStorage.getItem('sme_local_leads') || '[]');
-      existingLeads.push({
-        id: Date.now(),
-        fullName: fullName.trim(),
-        mobileNumber: cleanPhone,
-        state: selectedState,
-        segment,
-        capitalRange,
-        date: new Date().toISOString(),
-      });
-      localStorage.setItem('sme_local_leads', JSON.stringify(existingLeads));
-
-      setStatus('success');
-      setTimeout(() => {
-        setIsOpen(false);
-        setStatus('idle');
-      }, 3000);
+      setStatus('error');
+      setErrorMessage(
+        'Network error connecting to API. Please ensure your connection is active or call our academic desk at +91 70396 54680.'
+      );
     }
   };
 

@@ -1,7 +1,7 @@
 -- ==============================================================
 -- SHARE MARKET EXPERT — COMPLETE DATABASE ARCHITECTURE
--- Production MySQL Schema
--- Version: 1.0.0
+-- Production MySQL Schema (Hostinger Deployment Ready)
+-- Version: 1.1.0
 -- ==============================================================
 
 SET NAMES utf8mb4;
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `admins` (
   `username` VARCHAR(60) NOT NULL UNIQUE,
   `email` VARCHAR(120) NOT NULL UNIQUE,
   `password_hash` VARCHAR(255) NOT NULL,
-  `role` ENUM('super_admin', 'counselor', 'editor') NOT NULL DEFAULT 'editor',
+  `role` ENUM('super_admin', 'counselor', 'editor') NOT NULL DEFAULT 'super_admin',
   `is_active` TINYINT(1) NOT NULL DEFAULT 1,
   `failed_login_attempts` INT UNSIGNED NOT NULL DEFAULT 0,
   `locked_until` DATETIME NULL,
@@ -26,7 +26,23 @@ CREATE TABLE IF NOT EXISTS `admins` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -------------------------------------------------------------
--- 2. Table: leads (Inquiry Popup Form Submissions)
+-- 2. Table: admin_sessions (Server-Side Authenticated Sessions)
+-- -------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `admin_sessions` (
+  `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `admin_id` INT UNSIGNED NOT NULL,
+  `token` VARCHAR(64) NOT NULL UNIQUE,
+  `ip_address` VARCHAR(45) NULL,
+  `user_agent` VARCHAR(255) NULL,
+  `expires_at` DATETIME NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_token` (`token`),
+  INDEX `idx_expires` (`expires_at`),
+  CONSTRAINT `fk_session_admin` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- -------------------------------------------------------------
+-- 3. Table: leads (Inquiry Popup Form Submissions)
 -- -------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `leads` (
   `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -50,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `leads` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -------------------------------------------------------------
--- 3. Table: contacts (General Contact Us Desk Submissions)
+-- 4. Table: contacts (General Contact Us Desk Submissions)
 -- -------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `contacts` (
   `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -66,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `contacts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -------------------------------------------------------------
--- 4. Table: packages (Educational Plans & Pricing)
+-- 5. Table: packages (Educational Plans & Pricing)
 -- -------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `packages` (
   `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -84,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `packages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -------------------------------------------------------------
--- 5. Table: courses (Educational Services & Modules)
+-- 6. Table: courses (Educational Services & Modules)
 -- -------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `courses` (
   `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -103,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `courses` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -------------------------------------------------------------
--- 6. Table: blog_posts (Research-Based Articles)
+-- 7. Table: blog_posts (Research-Based Articles)
 -- -------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `blog_posts` (
   `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -125,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `blog_posts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -------------------------------------------------------------
--- 7. Table: faqs (Frequently Asked Questions)
+-- 8. Table: faqs (Frequently Asked Questions)
 -- -------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `faqs` (
   `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -139,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `faqs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -------------------------------------------------------------
--- 8. Table: settings (Platform Configuration & Popup Controls)
+-- 9. Table: settings (Platform Configuration & Popup Controls)
 -- -------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `settings` (
   `setting_key` VARCHAR(60) PRIMARY KEY,
@@ -151,15 +167,18 @@ CREATE TABLE IF NOT EXISTS `settings` (
 -- INITIAL SEED DATA
 -- ==============================================================
 
--- Seed Initial Super Admin (Password: 'SMEAdmin2026!#' - Hashed with BCRYPT)
+-- Seed Initial Super Admin
+-- Username: admin_sme
+-- Email: admin@sharemarketexpert.in
+-- Default Password: 'SMEAdmin2026!#' (Hashed via PHP BCRYPT)
 INSERT INTO `admins` (`username`, `email`, `password_hash`, `role`, `is_active`)
 VALUES (
   'admin_sme',
   'admin@sharemarketexpert.in',
-  '$2y$12$NqLz7nQ90X4eW.7H7b0Vv.G97gS61z0gZz73QO8hY7fS8e4C91d2W',
+  '$2y$12$1l56bS8L.Pi942dfAfQABu4XM6OJrCNGjL.vubUo01KAUGgomopaG',
   'super_admin',
   1
-) ON DUPLICATE KEY UPDATE `id` = `id`;
+) ON DUPLICATE KEY UPDATE `password_hash` = VALUES(`password_hash`);
 
 -- Seed Confirmed Packages (Silver: 24,999, Gold: 42,999, Platinum: 79,999)
 INSERT INTO `packages` (`slug`, `name`, `price_inr`, `duration_text`, `is_popular`, `short_description`, `features_json`, `display_order`) VALUES
@@ -175,7 +194,7 @@ INSERT INTO `settings` (`setting_key`, `setting_value`) VALUES
 ('contact_phone', '+91 70396 54680'),
 ('contact_email', 'info@sharemarketexpert.in'),
 ('popup_enabled', '1'),
-('popup_delay_seconds', '3'),
+('popup_delay_seconds', '1'),
 ('popup_frequency_hours', '24'),
 ('popup_heading', 'Share Market Expert'),
 ('popup_subtitle', ''),
@@ -184,4 +203,3 @@ INSERT INTO `settings` (`setting_key`, `setting_value`) VALUES
 ON DUPLICATE KEY UPDATE `setting_value` = VALUES(`setting_value`);
 
 SET FOREIGN_KEY_CHECKS = 1;
-

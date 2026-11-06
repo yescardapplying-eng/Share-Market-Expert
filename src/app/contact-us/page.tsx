@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { INDIAN_STATES_AND_UTS } from '@/data/indianStates';
 import AccordionFaq from '@/components/ui/AccordionFaq';
+import { API_ENDPOINTS } from '@/lib/api';
 
 const CONTACT_FAQS = [
   {
@@ -56,9 +57,12 @@ export default function ContactUsPage() {
     setStatus('submitting');
 
     try {
-      const response = await fetch('/api/contact.php', {
+      const response = await fetch(API_ENDPOINTS.CONTACT, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
         body: JSON.stringify({
           full_name: fullName.trim(),
           mobile_number: cleanPhone,
@@ -67,17 +71,16 @@ export default function ContactUsPage() {
         }),
       });
 
-      // Save locally as backup for admin view
-      const localContacts = JSON.parse(localStorage.getItem('sme_local_contacts') || '[]');
-      localContacts.push({
-        id: Date.now(),
-        fullName: fullName.trim(),
-        mobileNumber: cleanPhone,
-        state: selectedState,
-        message: message.trim(),
-        date: new Date().toISOString(),
-      });
-      localStorage.setItem('sme_local_contacts', JSON.stringify(localContacts));
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok || !data?.success) {
+        setStatus('error');
+        setErrorMessage(
+          data?.error ||
+          'Unable to send message to database. Please try again or reach our helpdesk at +91 70396 54680.'
+        );
+        return;
+      }
 
       setStatus('success');
       setFullName('');
@@ -85,19 +88,10 @@ export default function ContactUsPage() {
       setSelectedState('');
       setMessage('');
     } catch {
-      // Local fallback
-      const localContacts = JSON.parse(localStorage.getItem('sme_local_contacts') || '[]');
-      localContacts.push({
-        id: Date.now(),
-        fullName: fullName.trim(),
-        mobileNumber: cleanPhone,
-        state: selectedState,
-        message: message.trim(),
-        date: new Date().toISOString(),
-      });
-      localStorage.setItem('sme_local_contacts', JSON.stringify(localContacts));
-
-      setStatus('success');
+      setStatus('error');
+      setErrorMessage(
+        'Network error connecting to API. Please ensure your connection is active or reach us at +91 70396 54680.'
+      );
     }
   };
 
