@@ -62,3 +62,4 @@ if ($pdo) {
         'message' => 'Enquiry recorded successfully. (Demo/Fallback Mode)'
     ]);
 }
+

@@ -39,3 +39,4 @@ if ($pdo) {
 }
 
 sendJsonResponse(200, ['success' => true, 'data' => $settings]);
+

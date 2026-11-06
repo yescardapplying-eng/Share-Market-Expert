@@ -4,6 +4,7 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import LeadEnquiryModal from '@/components/popups/LeadEnquiryModal';
 import EducationalChatbot from '@/components/chat/EducationalChatbot';
+import MouseCursorEffect from '@/components/ui/MouseCursorEffect';
 import { LanguageProvider } from '@/context/LanguageContext';
 
 export const metadata: Metadata = {
@@ -108,15 +109,18 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className="scroll-smooth">
-      <head>
+    <html lang="en" data-scroll-behavior="smooth">
+      <head />
+      <body
+        className="antialiased min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-[#176B55] selection:text-white"
+        suppressHydrationWarning
+      >
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
-      </head>
-      <body className="antialiased min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-[#176B55] selection:text-white">
         <LanguageProvider>
+          <MouseCursorEffect />
           <Header />
           <main className="flex-1 w-full max-w-full overflow-x-hidden">{children}</main>
           <Footer />

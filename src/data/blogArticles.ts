@@ -197,3 +197,4 @@ Option premiums expand significantly before anticipated high-impact events (e.g.
     `,
   },
 ];
+

@@ -67,3 +67,4 @@ if ($pdo) {
         'message' => 'Inquiry registered successfully. (Demo/Fallback Mode)'
     ]);
 }
+

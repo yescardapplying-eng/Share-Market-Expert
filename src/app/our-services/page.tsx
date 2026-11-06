@@ -1,5 +1,6 @@
-import React from 'react';
-import type { Metadata } from 'next';
+'use client';
+
+import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   GraduationCap,
@@ -14,15 +15,6 @@ import {
   ShieldAlert,
   ChevronDown,
 } from 'lucide-react';
-
-export const metadata: Metadata = {
-  title: 'Our Educational Services | Stock Market Courses & Workshops',
-  description:
-    'Explore genuine educational services by Share Market Expert in Navi Mumbai: live webinars, technical analysis workshops, recorded lectures, and doubt-clearing sessions.',
-  alternates: {
-    canonical: 'https://sharemarketexpert.in/our-services',
-  },
-};
 
 interface ServiceItem {
   id: string;
@@ -161,6 +153,12 @@ const SERVICE_FAQS = [
 ];
 
 export default function OurServicesPage() {
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+
+  const toggleFaq = (index: number) => {
+    setOpenFaqIndex((prev) => (prev === index ? null : index));
+  };
+
   const serviceFaqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -176,12 +174,10 @@ export default function OurServicesPage() {
 
   return (
     <div className="bg-slate-50 min-h-screen py-12 sm:py-16">
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceFaqSchema) }}
-        />
-      </head>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceFaqSchema) }}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
@@ -197,7 +193,7 @@ export default function OurServicesPage() {
 
         {/* Page Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-[#EBF5F2] text-[#176B55] mb-3">
+          <span className="inline-block px-3.5 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-[#EBF5F2] text-[#176B55] mb-3 border border-[#176B55]/20">
             Academic Offerings
           </span>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#142B45] tracking-tight">
@@ -213,7 +209,7 @@ export default function OurServicesPage() {
           {SERVICES.map((s) => (
             <div
               key={s.id}
-              className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm hover:shadow-md hover:border-[#176B55]/50 transition-all flex flex-col justify-between"
+              className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm hover:shadow-xl hover:border-[#176B55]/50 transition-all duration-200 flex flex-col justify-between"
             >
               <div>
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
@@ -252,7 +248,7 @@ export default function OurServicesPage() {
                 </div>
                 <Link
                   href={s.ctaHref}
-                  className="touch-target inline-flex items-center justify-center px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#176B55] hover:bg-[#125543] transition-colors gap-1.5"
+                  className="touch-target inline-flex items-center justify-center px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-[#176B55] hover:bg-[#125543] transition-colors gap-1.5 shadow-xs"
                 >
                   <span>{s.ctaText}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -262,8 +258,8 @@ export default function OurServicesPage() {
           ))}
         </div>
 
-        {/* What We Do NOT Provide Section (Strict Prompt Requirement) */}
-        <section className="bg-red-50/70 border border-red-200 rounded-3xl p-8 sm:p-10 mb-20">
+        {/* What We Do NOT Provide Section */}
+        <section className="bg-red-50/70 border border-red-200 rounded-3xl p-8 sm:p-10 mb-20 shadow-xs">
           <div className="max-w-3xl mx-auto text-center mb-8">
             <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-red-100 text-red-700 mb-2">
               <ShieldAlert className="w-3.5 h-3.5" />
@@ -297,9 +293,12 @@ export default function OurServicesPage() {
           </div>
         </section>
 
-        {/* Service FAQs (At least 3 required) */}
-        <section className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm max-w-4xl mx-auto">
+        {/* Interactive Accordion FAQs (Only one open at a time) */}
+        <section className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm max-w-4xl mx-auto mb-16">
           <div className="text-center mb-10">
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-[#EBF5F2] text-[#176B55] mb-2">
+              Curriculum Clarity
+            </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#142B45]">
               Educational Services FAQs
             </h2>
@@ -308,13 +307,42 @@ export default function OurServicesPage() {
             </p>
           </div>
 
-          <div className="space-y-4">
-            {SERVICE_FAQS.map((faq) => (
-              <div key={faq.q} className="p-5 rounded-xl bg-slate-50 border border-slate-200">
-                <h3 className="text-base font-bold text-[#142B45] mb-2">{faq.q}</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">{faq.a}</p>
-              </div>
-            ))}
+          <div className="space-y-3.5">
+            {SERVICE_FAQS.map((faq, index) => {
+              const isOpen = openFaqIndex === index;
+              return (
+                <div
+                  key={faq.q}
+                  className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
+                    isOpen
+                      ? 'border-[#176B55] bg-white shadow-md ring-1 ring-[#176B55]/20'
+                      : 'border-slate-200 bg-slate-50/70 hover:border-slate-300 hover:bg-slate-50'
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleFaq(index)}
+                    className="w-full touch-target text-left px-6 py-4.5 flex items-center justify-between gap-4 font-bold text-slate-900 focus-visible:outline-2 focus-visible:outline-[#176B55] transition-colors"
+                    aria-expanded={isOpen}
+                  >
+                    <span className="text-base text-[#142B45] font-bold">{faq.q}</span>
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
+                        isOpen ? 'bg-[#176B55] text-white rotate-180 shadow-xs' : 'bg-slate-200 text-slate-700'
+                      }`}
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
+                  </button>
+
+                  {isOpen && (
+                    <div className="px-6 pb-5 pt-1 text-sm text-slate-600 leading-relaxed border-t border-slate-100 animate-in fade-in duration-200">
+                      <p>{faq.a}</p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </section>
       </div>

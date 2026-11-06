@@ -68,12 +68,10 @@ export default function EducationalPageLayout({
 
   return (
     <div className="bg-slate-50 min-h-screen py-10 sm:py-16">
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-        />
-      </head>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
@@ -265,3 +263,4 @@ export default function EducationalPageLayout({
     </div>
   );
 }
+

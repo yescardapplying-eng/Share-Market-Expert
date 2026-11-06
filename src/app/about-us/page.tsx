@@ -1,17 +1,20 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
 import {
   ShieldCheck,
   BookOpen,
   Target,
   Compass,
-  HeartHandshake,
   CheckCircle2,
   AlertTriangle,
   ArrowRight,
+  TrendingUp,
+  BarChart3,
+  Award,
+  Sparkles,
 } from 'lucide-react';
+import AccordionFaq from '@/components/ui/AccordionFaq';
 
 export const metadata: Metadata = {
   title: 'About Us | Stock Market Education Institute in Navi Mumbai',
@@ -35,6 +38,14 @@ const ABOUT_FAQS = [
     q: 'Can taking your course guarantee that I will become a profitable trader?',
     a: 'No educational institution can honestly guarantee market profitability. Financial markets involve continuous uncertainty and risk. Our mission is to equip you with structured analytical frameworks, mathematical position sizing, and emotional discipline so you can evaluate market data independently and manage risk objectively.',
   },
+  {
+    q: 'Where are your learning cohorts conducted?',
+    a: 'We conduct both online interactive webinars for learners across India and offline educational workshops from our registered academic center in Vashi, Navi Mumbai, Maharashtra.',
+  },
+  {
+    q: 'Do you offer stock recommendations, tips, or calls via WhatsApp/Telegram?',
+    a: 'Never. We strictly comply with Indian regulatory norms and will never provide trading calls, buy/sell recommendations, or guaranteed return schemes. We only provide educational materials and analytical mentoring.',
+  },
 ];
 
 export default function AboutUsPage() {
@@ -53,12 +64,11 @@ export default function AboutUsPage() {
 
   return (
     <div className="bg-slate-50 min-h-screen py-12 sm:py-16">
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutFaqSchema) }}
-        />
-      </head>
+      {/* Schema rendered directly without <head> wrapper */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutFaqSchema) }}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
@@ -73,29 +83,19 @@ export default function AboutUsPage() {
         </nav>
 
         {/* Hero Section */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-[#EBF5F2] text-[#176B55] mb-3">
-            Honest Financial Education
-          </span>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#142B45] tracking-tight">
-            Demystifying the Stock Market Through Disciplined Learning
-          </h1>
-          <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed">
-            Share Market Expert is built on a simple conviction: financial literacy should be grounded in structured curriculum, empirical chart analysis, and strict risk control — without misleading hype.
-          </p>
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
+          <div className="lg:col-span-7 space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EBF5F2] text-[#176B55] text-xs font-bold tracking-wide">
+              <ShieldCheck className="w-4 h-4" />
+              Rooted in Integrity &amp; Pure Education
+            </div>
 
-        {/* Brand Mission & Philosophy */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center mb-20">
-          <div className="lg:col-span-7 space-y-6 text-slate-700">
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#142B45]">
-              Who We Are &amp; Why We Teach
-            </h2>
-            <p className="text-base leading-relaxed">
-              Based in Vashi, Navi Mumbai, <strong>Share Market Expert</strong> is an independent stock market education initiative. We observed that the majority of retail participants entering the Indian equity markets rely on unregulated social media channels, speculative stock tips, and unverified profit screenshots.
-            </p>
-            <p className="text-base leading-relaxed">
-              We chose an alternative path: <strong>uncompromising educational honesty</strong>. Our programs do not promise overnight wealth or market clairvoyance. Instead, we teach market participants how the financial system actually works — from the mechanics of NSE/BSE auction matching to the psychological disciplines of capital preservation.
+            <h1 className="text-3xl sm:text-5xl font-extrabold text-[#142B45] leading-tight">
+              Honest Financial Market Education for the Serious Learner
+            </h1>
+
+            <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
+              Share Market Expert was founded with one clear purpose: to demystify Indian stock markets through disciplined, academic study — free of trading tips, false profit promises, and speculative hype.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
@@ -116,33 +116,70 @@ export default function AboutUsPage() {
             </div>
           </div>
 
+          {/* Educational Visual Card (Replaced repetitive emblem with market learning visual) */}
           <div className="lg:col-span-5 flex justify-center">
-            <div className="bg-[#142B45] text-white rounded-3xl p-8 shadow-xl border border-[#1F3858] max-w-md w-full text-center space-y-4">
-              <div className="w-24 h-24 mx-auto relative">
-                <Image
-                  src="/images/brand/share-market-expert-icon.png"
-                  alt="Share Market Expert Crest"
-                  width={256}
-                  height={256}
-                  className="w-full h-full object-contain"
-                />
+            <div className="bg-[#142B45] text-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-[#1F3858] max-w-md w-full space-y-5">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-[#176B55] flex items-center justify-center text-white">
+                    <BookOpen className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-white">Academic Curriculum</h3>
+                    <p className="text-[11px] text-slate-300">Vashi, Navi Mumbai Studio</p>
+                  </div>
+                </div>
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-semibold border border-emerald-500/30">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Pure Education
+                </span>
               </div>
-              <h3 className="text-xl font-bold text-white">Share Market Expert</h3>
-              <p className="text-xs text-[#1CA37E] font-semibold">
-                Stock Market Education &amp; Financial Literacy
-              </p>
-              <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-300 text-left space-y-2">
+
+              {/* Course Structure Highlights */}
+              <div className="space-y-3">
+                <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-[#176B55]/30 text-[#1CA37E] flex items-center justify-center shrink-0">
+                    <TrendingUp className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white">Price Action &amp; Chart Geometry</div>
+                    <div className="text-[11px] text-slate-300">Support, resistance &amp; multi-timeframe trends</div>
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-blue-500/20 text-blue-300 flex items-center justify-center shrink-0">
+                    <BarChart3 className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white">Quantitative Risk Management</div>
+                    <div className="text-[11px] text-slate-300">1% risk rules, stop loss calculation &amp; sizing</div>
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0">
+                    <Award className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white">Derivatives &amp; Option Greek Concepts</div>
+                    <div className="text-[11px] text-slate-300">Open interest, IV, theta decay &amp; hedging models</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-300 space-y-2">
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-[#1CA37E]" />
-                  <span>Academic Learning Center: Vashi, Navi Mumbai</span>
+                  <CheckCircle2 className="w-4 h-4 text-[#1CA37E] shrink-0" />
+                  <span>Zero stock tips or financial advisory services</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-[#1CA37E]" />
-                  <span>100% Non-Advisory Curriculum</span>
+                  <CheckCircle2 className="w-4 h-4 text-[#1CA37E] shrink-0" />
+                  <span>Structured live cohorts + lifetime community study notes</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-[#1CA37E]" />
-                  <span>Interactive Live Cohorts + Notes</span>
+                  <CheckCircle2 className="w-4 h-4 text-[#1CA37E] shrink-0" />
+                  <span>Interactive query resolution &amp; case study reviews</span>
                 </div>
               </div>
             </div>
@@ -150,7 +187,7 @@ export default function AboutUsPage() {
         </div>
 
         {/* What Learners Can Expect */}
-        <section className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm mb-20">
+        <section className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm mb-16">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-[#142B45] text-center mb-10">
             What You Can Expect From Our Learning Programs
           </h2>
@@ -199,24 +236,34 @@ export default function AboutUsPage() {
           </div>
         </div>
 
-        {/* About FAQs */}
+        {/* About FAQs with Interactive Accordion */}
         <section className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm max-w-4xl mx-auto">
           <div className="text-center mb-10">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EBF5F2] text-[#176B55] text-xs font-bold tracking-wider uppercase mb-3">
+              <Sparkles className="w-3.5 h-3.5" />
+              Frequently Asked Questions
+            </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#142B45]">
-              About Us FAQs
+              About Share Market Expert
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 mt-2">
               Common questions about our background, ethics, and educational standards.
             </p>
           </div>
 
-          <div className="space-y-4">
-            {ABOUT_FAQS.map((faq) => (
-              <div key={faq.q} className="p-5 rounded-xl bg-slate-50 border border-slate-200">
-                <h3 className="text-base font-bold text-[#142B45] mb-2">{faq.q}</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">{faq.a}</p>
-              </div>
-            ))}
+          <AccordionFaq items={ABOUT_FAQS} defaultOpenIndex={0} />
+
+          <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-xs text-slate-500">
+              Have specific questions about our upcoming batches or curriculum?
+            </p>
+            <Link
+              href="/contact-us"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#176B55] hover:text-[#142B45] transition-colors"
+            >
+              Contact Our Academic Team
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </section>
       </div>

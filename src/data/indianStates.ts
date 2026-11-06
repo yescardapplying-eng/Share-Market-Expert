@@ -45,8 +45,10 @@ export const TRADING_SEGMENT_OPTIONS = [
 ];
 
 export const CAPITAL_RANGE_OPTIONS = [
+  'Below Rs 50,000',
   'Above Rs 50,000',
   'Above Rs 1 Lacs',
   'Above Rs 3 Lacs',
   'Above Rs 5 Lacs',
 ];
+

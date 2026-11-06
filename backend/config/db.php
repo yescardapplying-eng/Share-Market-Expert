@@ -55,3 +55,4 @@ function sanitizeInput(?string $input): string {
     if ($input === null) return '';
     return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
 }
+

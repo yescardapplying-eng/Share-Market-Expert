@@ -92,12 +92,10 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   return (
     <article className="bg-slate-50 min-h-screen py-12 sm:py-16">
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-        />
-      </head>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
@@ -212,3 +210,4 @@ export default async function BlogPostPage({ params }: PageProps) {
     </article>
   );
 }
+

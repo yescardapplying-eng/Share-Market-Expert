@@ -184,3 +184,4 @@ INSERT INTO `settings` (`setting_key`, `setting_value`) VALUES
 ON DUPLICATE KEY UPDATE `setting_value` = VALUES(`setting_value`);
 
 SET FOREIGN_KEY_CHECKS = 1;
+

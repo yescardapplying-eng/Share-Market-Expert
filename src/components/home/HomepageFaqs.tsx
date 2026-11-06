@@ -63,15 +63,13 @@ export default function HomepageFaqs() {
 
   return (
     <section className="py-16 sm:py-24 bg-white border-b border-slate-200">
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-        />
-      </head>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-[#EBF5F2] text-[#176B55] mb-3">
+          <span className="inline-block px-3.5 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-[#EBF5F2] text-[#176B55] mb-3 border border-[#176B55]/20">
             Got Questions?
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#142B45] tracking-tight">
@@ -83,7 +81,7 @@ export default function HomepageFaqs() {
         </div>
 
         {/* Accordion Container (Only one open at a time) */}
-        <div className="space-y-4">
+        <div className="space-y-3.5">
           {HOMEPAGE_FAQS.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
@@ -98,14 +96,14 @@ export default function HomepageFaqs() {
                 <button
                   type="button"
                   onClick={() => toggleFAQ(index)}
-                  className="w-full touch-target text-left px-6 py-4.5 flex items-center justify-between gap-4 font-bold text-slate-900 focus-visible:outline-2 focus-visible:outline-[#176B55]"
+                  className="w-full touch-target text-left px-6 py-4.5 flex items-center justify-between gap-4 font-bold text-slate-900 focus-visible:outline-2 focus-visible:outline-[#176B55] transition-colors"
                   aria-expanded={isOpen}
                   aria-controls={`faq-answer-${index}`}
                 >
-                  <span className="text-base sm:text-lg text-[#142B45]">{faq.question}</span>
+                  <span className="text-base sm:text-lg text-[#142B45] font-bold">{faq.question}</span>
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
-                      isOpen ? 'bg-[#176B55] text-white rotate-180' : 'bg-slate-200 text-slate-700'
+                      isOpen ? 'bg-[#176B55] text-white rotate-180 shadow-xs' : 'bg-slate-200 text-slate-700'
                     }`}
                   >
                     <ChevronDown className="w-4 h-4" />
@@ -115,7 +113,7 @@ export default function HomepageFaqs() {
                 {isOpen && (
                   <div
                     id={`faq-answer-${index}`}
-                    className="px-6 pb-5 pt-1 text-sm sm:text-base text-slate-600 leading-relaxed border-t border-slate-100"
+                    className="px-6 pb-5 pt-1 text-sm sm:text-base text-slate-600 leading-relaxed border-t border-slate-100 animate-in fade-in duration-200"
                   >
                     <p>{faq.answer}</p>
                   </div>

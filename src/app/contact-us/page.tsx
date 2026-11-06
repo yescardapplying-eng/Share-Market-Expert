@@ -14,6 +14,7 @@ import {
   Lock,
 } from 'lucide-react';
 import { INDIAN_STATES_AND_UTS } from '@/data/indianStates';
+import AccordionFaq from '@/components/ui/AccordionFaq';
 
 const CONTACT_FAQS = [
   {
@@ -206,14 +207,14 @@ export default function ContactUsPage() {
 
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                    State / Union Territory (Optional)
+                    State
                   </label>
                   <select
                     value={selectedState}
                     onChange={(e) => setSelectedState(e.target.value)}
                     className="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-300 focus:border-[#176B55] bg-white text-slate-900"
                   >
-                    <option value="">Select State / UT...</option>
+                    <option value="">Select State</option>
                     {INDIAN_STATES_AND_UTS.map((st) => (
                       <option key={st} value={st}>
                         {st}
@@ -334,16 +335,10 @@ export default function ContactUsPage() {
             </p>
           </div>
 
-          <div className="space-y-4">
-            {CONTACT_FAQS.map((faq) => (
-              <div key={faq.q} className="p-5 rounded-xl bg-slate-50 border border-slate-200">
-                <h3 className="text-base font-bold text-[#142B45] mb-2">{faq.q}</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">{faq.a}</p>
-              </div>
-            ))}
-          </div>
+          <AccordionFaq items={CONTACT_FAQS} defaultOpenIndex={0} />
         </section>
       </div>
     </div>
   );
 }
+

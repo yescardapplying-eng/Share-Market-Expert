@@ -67,3 +67,4 @@ function isValidIndianMobile(string $mobile): bool {
     $clean = preg_replace('/\D/', '', $mobile);
     return (bool) preg_match('/^[6-9]\d{9}$/', $clean);
 }
+

@@ -71,3 +71,4 @@ if ($username === $demoUsername && ($password === $demoPassword || $password ===
 }
 
 sendJsonResponse(401, ['success' => false, 'error' => 'Invalid username or password credentials.']);
+

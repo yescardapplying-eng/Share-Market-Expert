@@ -1,5 +1,6 @@
-import React from 'react';
-import type { Metadata } from 'next';
+'use client';
+
+import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   Check,
@@ -9,17 +10,8 @@ import {
   HelpCircle,
   AlertCircle,
   ArrowRight,
-  PhoneCall,
+  ChevronDown,
 } from 'lucide-react';
-
-export const metadata: Metadata = {
-  title: 'Our Packages & Tuition Fees | Stock Market Learning Plans',
-  description:
-    'Compare structured stock market learning plans: Silver Plan (₹24,999 / 3 Months), Gold Plan (₹42,999 / 6 Months), and Platinum Plan (₹79,999 / 12 Months) with live educational sessions and completion certificates.',
-  alternates: {
-    canonical: 'https://sharemarketexpert.in/our-packages',
-  },
-};
 
 interface PackagePlan {
   id: string;
@@ -109,6 +101,12 @@ const PACKAGE_FAQS = [
 ];
 
 export default function OurPackagesPage() {
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+
+  const toggleFaq = (index: number) => {
+    setOpenFaqIndex((prev) => (prev === index ? null : index));
+  };
+
   const packageSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -124,12 +122,10 @@ export default function OurPackagesPage() {
 
   return (
     <div className="bg-slate-50 min-h-screen py-12 sm:py-16">
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(packageSchema) }}
-        />
-      </head>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(packageSchema) }}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
@@ -145,7 +141,7 @@ export default function OurPackagesPage() {
 
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-[#EBF5F2] text-[#176B55] mb-3">
+          <span className="inline-block px-3.5 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-[#EBF5F2] text-[#176B55] mb-3 border border-[#176B55]/20">
             Transparent Tuition Plans
           </span>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#142B45] tracking-tight">
@@ -161,10 +157,10 @@ export default function OurPackagesPage() {
           {PACKAGES.map((pkg) => (
             <div
               key={pkg.id}
-              className={`rounded-3xl p-8 flex flex-col justify-between transition-all duration-200 relative ${
+              className={`rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 relative ${
                 pkg.isPopular
                   ? 'bg-white border-2 border-[#176B55] shadow-2xl scale-100 lg:-translate-y-2'
-                  : 'bg-white border border-slate-200 shadow-md hover:shadow-lg'
+                  : 'bg-white border border-slate-200 shadow-md hover:shadow-xl hover:border-slate-300'
               }`}
             >
               {pkg.isPopular && (
@@ -221,7 +217,7 @@ export default function OurPackagesPage() {
           ))}
         </div>
 
-        {/* Feature Comparison Matrix for Desktop and Mobile Card Stack */}
+        {/* Feature Comparison Matrix */}
         <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm mb-20">
           <div className="max-w-3xl mb-8">
             <h2 className="text-2xl font-bold text-[#142B45]">Comprehensive Plan Feature Comparison</h2>
@@ -299,8 +295,8 @@ export default function OurPackagesPage() {
           </div>
         </div>
 
-        {/* Package FAQs (At least 3 required) */}
-        <section className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm max-w-4xl mx-auto">
+        {/* Interactive Accordion FAQs */}
+        <section className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm max-w-4xl mx-auto mb-16">
           <div className="text-center mb-10">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#142B45]">
               Package &amp; Enrollment FAQs
@@ -310,13 +306,42 @@ export default function OurPackagesPage() {
             </p>
           </div>
 
-          <div className="space-y-4">
-            {PACKAGE_FAQS.map((faq) => (
-              <div key={faq.q} className="p-5 rounded-xl bg-slate-50 border border-slate-200">
-                <h3 className="text-base font-bold text-[#142B45] mb-2">{faq.q}</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">{faq.a}</p>
-              </div>
-            ))}
+          <div className="space-y-3.5">
+            {PACKAGE_FAQS.map((faq, index) => {
+              const isOpen = openFaqIndex === index;
+              return (
+                <div
+                  key={faq.q}
+                  className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
+                    isOpen
+                      ? 'border-[#176B55] bg-white shadow-md ring-1 ring-[#176B55]/20'
+                      : 'border-slate-200 bg-slate-50/70 hover:border-slate-300 hover:bg-slate-50'
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleFaq(index)}
+                    className="w-full touch-target text-left px-6 py-4.5 flex items-center justify-between gap-4 font-bold text-slate-900 focus-visible:outline-2 focus-visible:outline-[#176B55] transition-colors"
+                    aria-expanded={isOpen}
+                  >
+                    <span className="text-base text-[#142B45] font-bold">{faq.q}</span>
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
+                        isOpen ? 'bg-[#176B55] text-white rotate-180 shadow-xs' : 'bg-slate-200 text-slate-700'
+                      }`}
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
+                  </button>
+
+                  {isOpen && (
+                    <div className="px-6 pb-5 pt-1 text-sm text-slate-600 leading-relaxed border-t border-slate-100 animate-in fade-in duration-200">
+                      <p>{faq.a}</p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </section>
       </div>
