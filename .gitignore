@@ -42,3 +42,6 @@ backend/config/*.local.php
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# deployment archives
+*.zip

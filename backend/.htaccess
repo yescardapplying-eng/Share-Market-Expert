@@ -4,16 +4,34 @@
 
 Options -Indexes
 
-# Block direct access to config files, SQL schemas, logs, and dotfiles
-<FilesMatch "^(schema\.sql|\.env.*|env\.php|env\.example\.php|.*\.log|.*\.md)$">
-    Order allow,deny
-    Deny from all
+# Block direct access to config files, SQL schemas, logs, scripts, and dotfiles
+<FilesMatch "^(schema\.sql|\.env.*|env\.php|env\.example\.php|create_admin\.php|.*\.sql|.*\.log|.*\.md)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
 </FilesMatch>
 
-# Block access to the config folder directly
+# Block access to config and scripts folders directly from web requests
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteRule ^config/ - [F,L]
+
+    # Deny access to sensitive folders
+    RewriteRule ^(config|scripts)/ - [F,L]
+
+    # Optional alias: route direct requests /endpoint.php to /api/endpoint.php if requested without /api/ prefix
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{DOCUMENT_ROOT}/api/$1.php -f
+    RewriteRule ^([^/]+)\.php$ api/$1.php [L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{DOCUMENT_ROOT}/api/admin/$1.php -f
+    RewriteRule ^admin/([^/]+)\.php$ api/admin/$1.php [L]
 </IfModule>
 
 # Security Headers
